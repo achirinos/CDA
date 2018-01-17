@@ -295,14 +295,17 @@ namespace Lumed.Interop.Cenetec.Helpers
 
         public static void UpdateLegalAuthenticator(XDocument xdoc)
         {
+            // TODO LDE
         }
 
         public static void UpdateAuthenticator(XDocument xdoc)
         {
+            // TODO ASD
         }
        
         public static void UpdateInFulfillmentOf(XDocument xdoc)
         {
+            // TODO LDE
         }
 
 
