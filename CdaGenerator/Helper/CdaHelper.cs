@@ -82,16 +82,28 @@ namespace Lumed.Interop.Cenetec.Helpers
         public static string DataEntererNamePath =
             "ns:ClinicalDocument/ns:dataEnterer/ns:assignedEntity/ns:assignedPerson/ns:name/ns:given";
 
-        public static string CustodianOrganizationIdPath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:id";
-        public static string CustodianOrganizationNamePath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:name";
-        public static string CustodianOrganizationTelecomPath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:telecom";
-        public static string CustodianOrganizationAddrPath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr";
-        public static string CustodianOrganizationPrecinctPath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/precinct";
-        public static string CustodianOrganizationCountyPath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/county";
-        public static string CustodianOrganizationStatePath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/state";
-        public static string CustodianOrganizationPostalCodePath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/postalCode";
-        public static string CustodianOrganizationCountryPath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/country";
+        public static string CustodianOrganizationIdPath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:id";
+        public static string CustodianOrganizationNamePath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:name";
+        public static string CustodianOrganizationTelecomPath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:telecom";
+        public static string CustodianOrganizationAddrPath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr";
+        public static string CustodianOrganizationPrecinctPath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/precinct";
+        public static string CustodianOrganizationCountyPath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/county";
+        public static string CustodianOrganizationStatePath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/state";
+        public static string CustodianOrganizationPostalCodePath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/postalCode";
+        public static string CustodianOrganizationCountryPath = "ns:ClinicalDocument/ns:custodian/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/country";
 
+        // InformationRecipient
+        public static string RecipientIdPath = "ns:ClinicalDocument/ns:informationRecipient/ns:intendedRecipient/ns:id";
+        public static string RecipientGivenNamePath = "ns:ClinicalDocument/ns:informationRecipient/ns:intendedRecipient/ns:informationRecipient/ns:name/ns:given";
+        public static string RecipientLastNamePath = "ns:ClinicalDocument/ns:informationRecipient/ns:intendedRecipient/ns:informationRecipient/ns:name/ns:family[1]";
+        public static string RecipientSurenamePath = "ns:ClinicalDocument/ns:informationRecipient/ns:intendedRecipient/ns:informationRecipient/ns:name/ns:family[2]";
+        public static string RecipientOrganizationIdPath = "ns:ClinicalDocument/ns:informationRecipient/ns:intendedRecipient/ns:receivedOrganization/ns:id";
+        public static string RecipientOrganizationNamePath = "ns:ClinicalDocument/ns:informationRecipient/ns:intendedRecipient/ns:receivedOrganization/ns:name";
+        
+        // Authenticator
+        public static string AuthenticatorTimePath = "ns:ClinicalDocument/ns:authenticator/ns:time";
+        public static string AuthenticatorAssignedSystemIdPath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:id[1]";
+        
 
 
         public static XmlNamespaceManager XmlNamespaceManager { get; private set; }
@@ -258,39 +270,55 @@ namespace Lumed.Interop.Cenetec.Helpers
             nameElement.Value = userFullName;
         }
 
-        public static void UpdateCustodian(XDocument xdoc, string oidCustodianOrganization, string CustodianOrganizationName, string CustodianOrganizationTelecom, string CustodianOrganizationAddress, string CustodianOrganizationPrecinct, string CustodianOrganizationCounty, string CustodianOrganizationState, string CustodianOrganizationPostalCode, string CustodianOrganizationCountry)
+        public static void UpdateCustodian(XDocument xdoc, string oidCustodianOrganization, string custodianOrganizationName, string custodianOrganizationTelecom, string custodianOrganizationAddress, string custodianOrganizationPrecinct, string custodianOrganizationCounty, string custodianOrganizationState, string custodianOrganizationPostalCode, string custodianOrganizationCountry)
         {
             var idElement = xdoc.XPathSelectElement(CustodianOrganizationIdPath, XmlNamespaceManager);
             idElement.Attribute("root").Value = oidCustodianOrganization;
 
             var nameElement = xdoc.XPathSelectElement(CustodianOrganizationNamePath, XmlNamespaceManager);
-            nameElement.Value = CustodianOrganizationName;
+            nameElement.Value = custodianOrganizationName;
 
             var telecomElement = xdoc.XPathSelectElement(CustodianOrganizationTelecomPath, XmlNamespaceManager);
-            telecomElement.Attribute("value").Value = CustodianOrganizationTelecom;
+            telecomElement.Attribute("value").Value = custodianOrganizationTelecom;
 
             var addrElement = xdoc.XPathSelectElement(CustodianOrganizationAddrPath, XmlNamespaceManager);
-            addrElement.Value = CustodianOrganizationAddress;
+            addrElement.Value = custodianOrganizationAddress;
 
             var precinctElement = xdoc.XPathSelectElement(CustodianOrganizationPrecinctPath, XmlNamespaceManager);
 
             var countyElement = xdoc.XPathSelectElement(CustodianOrganizationCountyPath, XmlNamespaceManager);
-            countyElement.Value = CustodianOrganizationCounty;
+            countyElement.Value = custodianOrganizationCounty;
 
             var stateElement = xdoc.XPathSelectElement(CustodianOrganizationStatePath, XmlNamespaceManager);
-            stateElement.Value = CustodianOrganizationState;
+            stateElement.Value = custodianOrganizationState;
 
             var postalCodeElement = xdoc.XPathSelectElement(CustodianOrganizationPostalCodePath, XmlNamespaceManager);
-            postalCodeElement.Value = CustodianOrganizationPostalCode;
+            postalCodeElement.Value = custodianOrganizationPostalCode;
 
             var countryElement = xdoc.XPathSelectElement(CustodianOrganizationCountyPath, XmlNamespaceManager);
-            countryElement.Value = CustodianOrganizationCountry;
-            
+            countryElement.Value = custodianOrganizationCountry;           
 
         }
 
-        public static void UpdateInformationRecipient(XDocument xdoc)
+        public static void UpdateInformationRecipient(XDocument xdoc, Doctor recipientDoctor, string recipientOrganizationName)
         {
+            var idElement = xdoc.XPathSelectElement(RecipientIdPath, XmlNamespaceManager);
+            idElement.Attribute("extension").Value = recipientDoctor.ProfessionalLicense;
+
+            var givenElement = xdoc.XPathSelectElement(RecipientGivenNamePath, XmlNamespaceManager);
+            givenElement.Value = string.Format("{0} {1}", recipientDoctor.FirstName, recipientDoctor.MiddleName);
+
+            var lastNameElement = xdoc.XPathSelectElement(RecipientLastNamePath, XmlNamespaceManager);
+            lastNameElement.Value = recipientDoctor.LastName;
+
+            var surenameElement = xdoc.XPathSelectElement(RecipientSurenamePath, XmlNamespaceManager);
+            surenameElement.Value = recipientDoctor.Surname;
+
+            var organizationIdElement = xdoc.XPathSelectElement(RecipientOrganizationIdPath, XmlNamespaceManager);
+            organizationIdElement.Value = recipientDoctor.ClinicID;
+
+            var organizationNameElement = xdoc.XPathSelectElement(RecipientOrganizationNamePath, XmlNamespaceManager);
+            organizationIdElement.Value = recipientOrganizationName;
         }
 
         public static void UpdateLegalAuthenticator(XDocument xdoc)
@@ -300,7 +328,7 @@ namespace Lumed.Interop.Cenetec.Helpers
 
         public static void UpdateAuthenticator(XDocument xdoc)
         {
-            // TODO ASD
+            
         }
        
         public static void UpdateInFulfillmentOf(XDocument xdoc)
