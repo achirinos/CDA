@@ -92,6 +92,22 @@ namespace Lumed.Interop.Cenetec.Helpers
         public static string CustodianOrganizationPostalCodePath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/postalCode";
         public static string CustodianOrganizationCountryPath = "ns:ClinicalDocument/ns:custodia/ns:assignedCustodian/ns:representedCustodianOrganization/ns:addr/country";
 
+        public static string LegalAuthenticatorTimePath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:time";
+        public static string LegalAuthenticatorUserIdPath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:id[1]";
+        public static string LegalAuthenticatorDoctorIdPath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:id[2]";
+        public static string LegalAuthenticatorCodePath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:code";
+        public static string LegalAuthenticatorFirstNamePath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:assignedPerson/ns:name/ns:given";
+        public static string LegalAuthenticatorLastNamePath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:assignedPerson/ns:name/ns:family[1]";
+        public static string LegalAuthenticatorSurNamePath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:assignedPerson/ns:name/ns:family[2]";
+        public static string LegalAuthenticatorRepresentedOrganizationIdPath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:representedOrganization/ns:id/";
+        public static string LegalAuthenticatorRepresentedOrganizationNamePath = "ns:ClinicalDocument/ns:legalAuthenticator/ns:assignedEntity/ns:representedOrganization/ns:name/";
+
+        public static string InFulfillmentOfIdPath = "ns:ClinicalDocument/ns:inFulfillmentOf/ns:order/ns:id";
+
+        public static string ComponentTextInterrogatoryPath = "ns:ClinicalDocument/ns:component/ns:structuredBody/ns:component[1]/ns:section/ns:text";
+        public static string ComponentTextDiagnosticPath = "ns:ClinicalDocument/ns:component/ns:structuredBody/ns:component[2]/ns:section/ns:text";
+        public static string ComponentOrdersPath = "ns:ClinicalDocument/ns:component/ns:structuredBody/ns:component[3]/ns:section/ns:text/ns:paragraph[1]";
+        public static string ComponentTreatmentPlanPath = "ns:ClinicalDocument/ns:component/ns:structuredBody/ns:component[3]/ns:section/ns:text/ns:paragraph[2]";
 
 
         public static XmlNamespaceManager XmlNamespaceManager { get; private set; }
@@ -293,19 +309,65 @@ namespace Lumed.Interop.Cenetec.Helpers
         {
         }
 
-        public static void UpdateLegalAuthenticator(XDocument xdoc)
+        public static void UpdateLegalAuthenticator(XDocument xdoc, DateTime LegalAuthenticatorDatetime, string oidLegalAuthenticatorUser,string oidLegalAuthenticatorUserName,string LegalAuthenticatorDoctorProfessionalLicense, string oidLegalAuthenticatorDoctor,  string oidLegalAuthenticatorInstitution, string nameLegalAuthenticatorInstitution, string LegalAuthenticatorDoctorSpecialtyId, string LegalAuthenticatorDoctorSpecialtyName, string LegalAuthenticatorFirstName, string LegalAuthenticatorLastName, string LegalAuthenticatorSurName)
         {
-            // TODO LDE
+
+            var timeElement = xdoc.XPathSelectElement(LegalAuthenticatorTimePath, XmlNamespaceManager);
+            timeElement.Value = LegalAuthenticatorDatetime.ToLongDateString();
+
+            var useridElement = xdoc.XPathSelectElement(LegalAuthenticatorUserIdPath, XmlNamespaceManager);
+            useridElement.Attribute("root").Value = oidLegalAuthenticatorUser;
+            useridElement.Attribute("extension").Value = oidLegalAuthenticatorUserName;
+
+            var doctoridElement = xdoc.XPathSelectElement(LegalAuthenticatorUserIdPath, XmlNamespaceManager);
+            doctoridElement.Attribute("extension").Value = LegalAuthenticatorDoctorProfessionalLicense;
+
+            var codeElement = xdoc.XPathSelectElement(LegalAuthenticatorCodePath, XmlNamespaceManager);
+            codeElement.Attribute("code").Value = LegalAuthenticatorDoctorSpecialtyId;
+            codeElement.Attribute("displayName").Value = LegalAuthenticatorDoctorSpecialtyName;
+
+            var firstnameElement = xdoc.XPathSelectElement(LegalAuthenticatorFirstNamePath, XmlNamespaceManager);
+            firstnameElement.Value = LegalAuthenticatorFirstName;
+
+            var lastNameElement = xdoc.XPathSelectElement(LegalAuthenticatorLastNamePath, XmlNamespaceManager);
+            lastNameElement.Value = LegalAuthenticatorLastName;
+
+            var surNameElement = xdoc.XPathSelectElement(LegalAuthenticatorSurNamePath, XmlNamespaceManager);
+            lastNameElement.Value = LegalAuthenticatorSurName;
+
+            var idOrganizationElement = xdoc.XPathSelectElement(LegalAuthenticatorRepresentedOrganizationIdPath, XmlNamespaceManager);
+            idOrganizationElement.Attribute("root").Value = oidLegalAuthenticatorInstitution;
+
+            var nameOrganizationElement = xdoc.XPathSelectElement(LegalAuthenticatorRepresentedOrganizationNamePath, XmlNamespaceManager);
+            nameOrganizationElement.Value = nameLegalAuthenticatorInstitution;
         }
+
 
         public static void UpdateAuthenticator(XDocument xdoc)
         {
             // TODO ASD
         }
        
-        public static void UpdateInFulfillmentOf(XDocument xdoc)
+        public static void UpdateInFulfillmentOf(XDocument xdoc, string oidInFulfillmentOf, string InFulfillmentOfExtension)
         {
-            // TODO LDE
+            var idElement = xdoc.XPathSelectElement(InFulfillmentOfIdPath, XmlNamespaceManager);
+            idElement.Attribute("root").Value = oidInFulfillmentOf;
+            idElement.Attribute("extension").Value = InFulfillmentOfExtension;
+        }
+
+        public static void UpdateComponent(XDocument xdoc, string ComponentInterrogatoryText, string ComponentDiagnosticText, string ComponentOrdersText, string ComponentTreatmentText)
+        {
+            var textinterrogatoryElement = xdoc.XPathSelectElement(ComponentTextInterrogatoryPath, XmlNamespaceManager);
+            textinterrogatoryElement.Value = ComponentInterrogatoryText;
+
+            var textdiagnosticElement = xdoc.XPathSelectElement(ComponentTextDiagnosticPath, XmlNamespaceManager);
+            textdiagnosticElement.Value = ComponentDiagnosticText;
+
+            var ordersElement = xdoc.XPathSelectElement(ComponentOrdersPath, XmlNamespaceManager);
+            ordersElement.Value = ComponentOrdersText;
+
+            var treatmentElement = xdoc.XPathSelectElement(ComponentTreatmentPlanPath, XmlNamespaceManager);
+            treatmentElement.Value = ComponentTreatmentText;
         }
 
 

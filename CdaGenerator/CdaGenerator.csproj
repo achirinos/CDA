@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lumed.Entities">
-      <HintPath>..\..\Lumed\Lumed 1.2.0.0\Bin\Lumed.Entities.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Proyectos\Lumed\Lumed 1.2.0.0\Bin\Lumed.Entities.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
