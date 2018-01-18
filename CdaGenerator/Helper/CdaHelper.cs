@@ -106,11 +106,32 @@ namespace Lumed.Interop.Cenetec.Helpers
         public static string AuthenticatorProfessionalLicensePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:id[2]";
         public static string AuthenticarotSpecialtyPath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:code";
         public static string AuthenticatorGivenNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:given";
-        public static string AuthenticatorLastNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:family[1]";
-        public static string AuthenticatorSureNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:family[2]";
+        public static string AuthenticatorLastNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:name/ns:family[1]";
+        public static string AuthenticatorSurenamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:name/ns:family[2]";
         public static string AuthenticatorOrganizationIdPath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:representedOrganization/ns:id";
         public static string AuthenticatorOrganizationNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:representedOrganization/ns:name";
         
+        // ComponentOf
+        public static string ComponentOfClinicalActIdPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:id";
+        public static string ComponentOfAttentionCodePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:code";
+        public static string ComponentOfTimePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:effectiveTime/ns:low";
+        public static string ComponentOfSystemIdPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:id[1]";
+        public static string ComponentOfProfessionalLicensePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:id[2]";
+        public static string ComponentOfGivenNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/assignedPerson/ns:name/ns:given";
+        public static string ComponentOfLastNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/assignedPerson/ns:name/ns:family[1]";
+        public static string ComponentOfurenamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/assignedPerson/ns:name/ns:family[2]";
+        public static string ComponentOfOrganizationIdPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/representedOrganization/id";
+        public static string ComponentOfOrganizationNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/representedOrganization/name";
+        public static string ComponentOfLocationIdPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility/id";
+        public static string ComponentOfLocationNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility//location/name";
+        public static string ComponentOfLocationAddrPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility/location/addr";
+        public static string ComponentOfLocationPrecinctPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility/location/addr/precinct";
+        public static string ComponentOfLocationCountyPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility/location/addr/county";
+        public static string ComponentOfLocationStatePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility/location/addr/state";
+        public static string ComponentOfLocationPostalCodePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility/location/addr/postalCode";
+        public static string ComponentOfLocationCountryPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:location/ns:healthCareFacility/location/addr/counrty";
+
+
 
         public static XmlNamespaceManager XmlNamespaceManager { get; private set; }
 
@@ -350,7 +371,7 @@ namespace Lumed.Interop.Cenetec.Helpers
             var lastNameElement = xdoc.XPathSelectElement(AuthenticatorLastNamePath, XmlNamespaceManager);
             lastNameElement.Value = authenticator.LastName;
 
-            var surenameElement = xdoc.XPathSelectElement(AuthenticatorSureNamePath, XmlNamespaceManager);
+            var surenameElement = xdoc.XPathSelectElement(AuthenticatorSurenamePath, XmlNamespaceManager);
             surenameElement.Value = authenticator.Surname;
 
             var organizationIdElement = xdoc.XPathSelectElement(AuthenticatorOrganizationIdPath, XmlNamespaceManager);
@@ -365,6 +386,62 @@ namespace Lumed.Interop.Cenetec.Helpers
             // TODO LDE
         }
 
+        public static void UpdateComponentOf(XDocument xdoc, string oidClinicalActs, string clinicalActID, string oidSystemUsers, string userID, DateTime dateTime, Doctor doctor, string organizationID, string organizationName, string clues, string locationName,string organizationAddress, string organizationPrecinct, string organizationCounty, string organizationState, string organizationPostalCode, string organizationCountry)
+        {
+            var idElement = xdoc.XPathSelectElement(ComponentOfClinicalActIdPath, XmlNamespaceManager);
+            idElement.Attribute("root").Value = oidClinicalActs;
+            idElement.Attribute("extension").Value = clinicalActID;
+
+            var timeElement = xdoc.XPathSelectElement(ComponentOfTimePath, XmlNamespaceManager);
+            timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+
+            var systemIdElement = xdoc.XPathSelectElement(ComponentOfSystemIdPath, XmlNamespaceManager);
+            systemIdElement.Attribute("root").Value = oidSystemUsers;
+            systemIdElement.Attribute("extension").Value = userID;
+
+            var professionalLicensePath = xdoc.XPathSelectElement(ComponentOfProfessionalLicensePath, XmlNamespaceManager);
+            professionalLicensePath.Attribute("extension").Value = doctor.ProfessionalLicense;
+
+            var givenElement = xdoc.XPathSelectElement(ComponentOfGivenNamePath,XmlNamespaceManager);
+            givenElement.Value = string.Format("{0} {1}", doctor.FirstName, doctor.MiddleName);
+
+            var lastNameElement = xdoc.XPathSelectElement(ComponentOfLastNamePath, XmlNamespaceManager);
+            lastNameElement.Value = doctor.LastName;
+
+            var surenameElement = xdoc.XPathSelectElement(ComponentOfurenamePath, XmlNamespaceManager);
+            surenameElement.Value = doctor.Surname;
+
+            var organizationIdElement = xdoc.XPathSelectElement(ComponentOfOrganizationIdPath, XmlNamespaceManager);
+            organizationIdElement.Attribute("root").Value = organizationID;
+
+            var organizationNameElement = xdoc.XPathSelectElement(ComponentOfOrganizationNamePath, XmlNamespaceManager);
+            organizationNameElement.Value = organizationName;
+
+            var locationIdElment = xdoc.XPathSelectElement(ComponentOfLocationIdPath, XmlNamespaceManager);
+            locationIdElment.Attribute("extension").Value = clues;
+
+            var locationNameElement = xdoc.XPathSelectElement(ComponentOfLocationNamePath, XmlNamespaceManager);
+            locationIdElment.Value = locationName;
+
+            var locationAddr = xdoc.XPathSelectElement(ComponentOfLocationAddrPath, XmlNamespaceManager);
+            locationAddr.Value = organizationAddress;
+
+            var locationPrecinctElement = xdoc.XPathSelectElement(ComponentOfLocationPrecinctPath, XmlNamespaceManager);
+            locationNameElement.Value = organizationPrecinct;
+
+            var locationCountyElement = xdoc.XPathSelectElement(ComponentOfLocationCountryPath, XmlNamespaceManager);
+            locationCountyElement.Value = organizationCounty;
+
+            var locationStateElelemt = xdoc.XPathSelectElement(ComponentOfLocationStatePath, XmlNamespaceManager);
+            locationStateElelemt.Value = organizationState;
+
+            var locationPostalCodeElement = xdoc.XPathSelectElement(ComponentOfLocationPostalCodePath, XmlNamespaceManager);
+            locationPostalCodeElement.Value = organizationPostalCode;
+
+            var locationCountryElement = xdoc.XPathSelectElement(ComponentOfLocationCountryPath, XmlNamespaceManager);
+            locationCountryElement.Value = organizationCountry;
+
+        }
 
         public static string GetFormattedDateTime(DateTime? dateTime)
         {
