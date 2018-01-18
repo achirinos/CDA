@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="cda/CDATC.xsl"?>
+<!--
+	*****************************************************************
+	Proyecto: Definición de Guía de Intercambio para Interconsulta a Distancia - CENETEC
+	Fecha actualización: 02/09/2015 
+	Autor: Martí Pàmies Solà (martipamies@clinicaldocumentengineering.com)
+	Revisión: José Manuel Castañeda Casas (manuel@zicral.com), CENETEC (www.cenetec.salud.gob.mx)
+	Versión: 0.2
+	*****************************************************************
+-->
+
+<!-- FORMATO DEL DOCUMENTO
+	1- Este es un documento XML valido que una vez remplazados los parámetros cumple con el esquema normativo
+		HL7 CDA Release 2 (http://www.hl7.org/documentcenter/private/standards/cda/r2/cda_r2_normativewebedition2010.zip)
+	2- La mayoría de restricciones que se añaden a las propias del esquema normativo están basadas en:
+		HL7 CCDA (http://www.hl7.org/implement/standards/product_brief.cfm?product_id=258)
+	3- Los parámetros a informar aparecen en notación {ParamName}, donde ParamName es el nombre del parámetro.    
+ -->
+
+
+<!-- CONSIDERACIONES GENERALES PARA TODO EL DOCUMENTO
+	1- El encoding que es define en la cabecera del documento debe ser UTF-8 (encoding="UTF-8").
+	2- Todas las fechas son TimeStamps con el patrón: AAAAMMDDHHMMSS+NNNN, donde es obligatorio como mínimo AAAAMMDD.
+		Si no se indica HHMMSS el DACS de OpenCDE interpreta estos valores a 0. 
+		Si no se indica TimeZone el DACS de OpenCDE interpreta que están en la zona horaria del custodio.
+	3- Para cada elemento se indica su multiplicidad con el comentario [N..M]. 
+		Si por un elemento no se indica multiplicidad, esto implica que es obligatorio.
+	
+-->
+ 
+<ClinicalDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:hl7-org:v3"
+	xsi:schemaLocation="urn:hl7-org:v3 cda/CDA.xsd">
+
+	<!-- 
+		CABECERA  
+	-->
+
+	<!-- Dominio México-->
+	<realmCode code="MX"/>
+
+	<!-- Valor fijo que identifica un documento HL7 CDA R2 -->
+	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+
+	<!-- [1..1] Identificador de la guía de implementación de la Nota médica de solicitud de interconsulta a distancia.-->
+	<templateId root="2.16.840.1.113883.3.215.3.11.1.2"/>
+
+	<!-- [1..1] Identificador único del documento.
+        - root: OID para documentos del sistema solicitante.
+        - extension: Identificador único del documento generado en el sistema solicitante.
+    -->
+	<id root="{OID Documentos del sistema}" extension="{Identificador de documento}"/>
+
+	<!-- [1..1] Tipo de documento según vocabulario LOINC para nota de solicitud de interconsulta -->
+	<code code="57133-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+		displayName="Referral note"/>
+
+	<!-- [1..1] Título del documento-->
+	<title>Nota de respuesta de interconsulta a distancia</title>
+
+	<!-- [1..1] Fecha y hora de firma del documento en el sistema emisor AAAAMMDDHHMMSS+NNNN -->
+	<effectiveTime value="{Fecha y hora de documento}"/>
+
+	<!-- [1..1] Nivel de confidencialidad según vocabulario HL7. 
+		 N: normal, valor por defecto.
+		 R: restringido.
+		 V: muy restringido.
+		 A partir del valor de este elemento, junto con otros elementos del CDA, se pueden definir políticas de seguridad en el DACS OpenCDE,
+		 como por ejemplo:
+		 "Solo los facultativos con la misma especialidad médica que el firmante legal pueden ver los documentos restringidos".
+	-->
+	<confidentialityCode code="{Confidencialidad}" codeSystem="2.16.840.1.113883.5.25"/>
+
+	<!-- [1..1] Idioma en el que está escrito el texto narrativo. 
+		 Es importante definir correctamente este valor para poder realizar en el DACS búsquedas "FullTextSeach"-->
+	<languageCode code="es-MX"/>
+
+	<!-- Para compatibilidad con CDA DGIS -->
+	<setId root="{OID Documentos del sistema}" extension="{Identificador de documento}"/>
+	<versionNumber value="1"/>
+
+	<!-- [1..1] El Paciente -->
+	<recordTarget>
+		<patientRole>
+			<!-- [1..1] Identificador ÚNICO del paciente en el sistema solicitante.
+             - root: OID de la tabla de paciente en el sistema solicitante.
+             - extension: identificador de paciente en el sistema solicitante. -->
+			<id root="{OID Pacientes del sistema}" extension="{Identificador del paciente}"
+				assigningAuthorityName="{Nombre del identificador de pacientes}"/>
+
+			<!-- [0..1] Identificación del paciente mediante CURP-->
+			<id root="2.16.840.1.113883.4.629" extension="{Paciente CURP}"/>
+
+			<!-- [0..1] Identificación del paciente mediante Número de póliza de Seguro Popular con número de integrante -->
+			<id root="2.16.840.1.113883.3.215.3.12.301" extension="{Numero Seguro Popular}"/>
+
+			<!-- [1..1] Dirección de contacto con el paciente.  -->
+			<addr>
+				<!--[0..1] Domicilio del paciente escrito en forma legible de acuerdo a los valores codificados.-->
+				{Paciente Domicilio legible} <!--[1..1] Localidad de acuerdo al catálogo de INEGI-->
+				<precinct>{Paciente Domicilio Localidad}</precinct>
+				<!--[1..1] Muncipio de acuerdo al catálogo de INEGI -->
+				<county>{Paciente Domicilio Municipio}</county>
+				<!--[1..1] Entidad de acuerdo al catálogo de INEGI-->
+				<state>{Paciente Domicilio Entidad}</state>
+				<!--[1..1] Código Postal de acuerdo al catálogo de SEPOMEX-->
+				<postalCode>{Paciente Domicilio CP}</postalCode>
+				<!--[1..1] Clave del país de acuerdo al catálogo de nacionalidades RENAPO-->
+				<country>{Paciente Domicilio Pais}</country>
+			</addr>
+
+			<!-- [0..N] Teléfonos de contacto del paciente. -->
+			<telecom value="tel:{Paciente teléfono}"/>
+			<!-- [0..N] Mails de contacto del paciente. -->
+			<telecom value="mailto:{Paciente email}"/>
+
+			<!-- [1..1] Datos demográficos del paciente -->
+			<patient>
+				<!-- [1..1] Nombre del paciente, segundo apellido opcional -->
+				<name>
+					<given>{Paciente Nombre}</given>
+					<family>{Paciente Primer apellido}</family>
+					<!-- [0..1] -->
+					<family>{Paciente Segundo apellido}</family>
+				</name>
+				<!-- [1..1] Sexo del paciente. Posibles valores: F->Femenino; M->Masculino; U->Indefinido; UNK->Desconocido -->
+				<administrativeGenderCode codeSystem="2.16.840.1.113883.5.1" code="{Paciente Sexo}"/>
+
+				<!-- [1..1] Fecha de nacimiento del paciente. -->
+				<birthTime value="{Paciente Fecha nacimiento}"/>
+
+				<!-- [0..1] Estado Civil según vocabulario HL7 V3 MaritalStatus  
+					A	Annulled
+					D	Divorced
+					I	Interlocutory
+					L 	Legally Separated
+					M	Married
+					P	Polygamous
+					S	Never Married
+					T	Domestic partner
+					W	Widowed
+				-->
+				<maritalStatusCode code="{Paciente Estado Civil}" codeSystem="2.16.840.1.113883.5.2"
+					codeSystemName="MaritalStatusCode"/>
+
+				<!-- [0..1] Religión de acuerdo al catálogo de INEGI-->
+				<religiousAffiliationCode codeSystem="2.16.840.1.113883.3.215.12.11"
+					codeSystemName="Religiones INEGI" code="{Paciente Religión}"/>
+
+				<!-- [0..1] Etnia según catálogo INEGI de lenguas indígenas -->
+				<ethnicGroupCode codeSystem="2.16.840.1.113883.3.215.12.10"
+					codeSystemName="Lenguas Indígenas INEGI" code="{Paciente Etnia}"/>
+
+				<birthplace>
+					<place>
+						<addr>
+							<!-- [1..1] Clave de la Entidad federativa de nacimiento de acuerdo al catálogo de INEGI-->
+							<state>{Paciente Entidad nacimiento}</state>
+							<!--[1..1] Clave de NACIONALIDAD de acuerdo al catálogo de nacionalidades RENAPO-->
+							<country>{Paciente Nacionalidad}</country>
+						</addr>
+					</place>
+				</birthplace>
+			</patient>
+		</patientRole>
+	</recordTarget>
+
+	<!-- [1..1] Autor del documento (médico consultado) -->
+	<author>
+		<!-- [1..1] Fecha de firma el documento. 
+			 Es la misma que el atributo ClinicalDocument/effectiveTime/@value-->
+		<time value="{Fecha y hora de documento}"/>
+		<assignedAuthor>
+			<!-- [1..1]  Identificación por usuario en sistema solicitante -->
+			<id root="{OID Usuarios del sistema}"
+				extension="{Consultado Identificador en el sistema}"/>
+			<!-- [1..1]  Identificación del médico por cédula profesional -->
+			<id root="2.16.840.1.113883.3.215.12.18" extension="{Consultado Cedula profesional}"/>
+			<!-- [0..1] Especialidad médica. -->
+			<code code="{Consultado Especialidad Clave}" codeSystem="2.16.840.1.113883.3.215.3.12.9"
+				displayName="{Consultado Especialidad}"/>
+			<!-- [1..1] Dirección del autor (Valor Fijo a null). -->
+			<addr nullFlavor="UNK"/>
+			<!-- [1..1] Nombre completo del médico. Importante para poder mostrarlo en la cabecera del documento renderizado a html/pdf-->
+			<assignedPerson>
+				<name>
+					<given>{Consultado Nombre}</given>
+					<family>{Consultado Primer apellido}</family>
+					<!-- [0..1] -->
+					<family>{Consultado Segundo apellido}</family>
+				</name>
+			</assignedPerson>
+			<!-- [1..1] Establecimiento donde están el médico solicitante y el paciente -->
+			<representedOrganization>
+				<!-- [1..1]  OID de la organización a la que pertenece el autor del sistema-->
+				<id root="{OID Prestador de servicios de salud Consultado}"/>
+				<name>{Consultado Prestador de servicios de salud}</name>
+			</representedOrganization>
+		</assignedAuthor>
+	</author>
+
+	<!-- [1..1] Software que genera el CDA -->
+	<author>
+		<!-- [1..1] Fecha de firma el documento. 
+			 Es la misma que el atributo ClinicalDocument/effectiveTime/@value-->
+		<time value="{Fecha y hora de documento}"/>
+		<assignedAuthor>
+			<!-- [1..1] OID del Software -->
+			<id root="{OID Instancia del sistema}"/>
+			<!-- [1..1] Dirección del autor (Valor Fijo a null). -->
+			<addr nullFlavor="UNK"/>
+			<!-- [1..1] Mail del solicitante. Si no se conoce, eliminar value y añadir: nullFlavor="UNK" 
+			<telecom use="WP" value="mailto:autor@doamin.com"/> -->
+			<telecom nullFlavor="UNK"/>
+			<assignedAuthoringDevice>
+				<!-- [1..1] Nombre del sistema (Fabricante, Producto, Versión) que genera el documento electrónico -->
+				<softwareName>{Software}</softwareName>
+			</assignedAuthoringDevice>
+			<representedOrganization>
+				<!-- OID de la institución responsable de la autoría del documento electrónico -->
+				<id root="{OID Prestador de servicios de salud Consultado}"/>
+				<!-- Nombre de la institución responsable de la autoría del documento -->
+				<name>{Consultado Prestador de servicios de salud}</name>
+			</representedOrganization>
+		</assignedAuthor>
+	</author>
+
+	<!-- [0..1] Capturista -->
+	<dataEnterer>
+		<!-- [1..1] Fecha de firma el documento. 
+			 Es la misma que el atributo ClinicalDocument/effectiveTime/@value-->
+		<time value="{Fecha y hora de documento}"/>
+		<assignedEntity>
+			<!-- [1..1]  Identificación por usuario en sistema solicitante -->
+			<id root="{OID Usuarios del sistema}"
+				extension="{Capturista Identificador en el sistema}"/>
+			<assignedPerson>
+				<name>
+					<given>{Capturista Nombre}</given>
+					<family>{Capturista Primer apellido}</family>
+					<!-- [0..1] -->
+					<family>{Capturista Segundo apellido}</family>
+				</name>
+			</assignedPerson>
+		</assignedEntity>
+	</dataEnterer>
+
+	<!-- [1..1] Responsable de custodiar el CDA (CENETEC en este proyecto). -->
+	<custodian>
+		<assignedCustodian>
+			<representedCustodianOrganization>
+				<id root="2.16.840.1.113883.3.215.6"/>
+				<name>Centro Nacional de Excelencia Tecnológica en Salud (CENETEC)</name>
+				<telecom value="tel:(55) 5207 3990" use="WP"/>
+				<addr use="WP"> Paseo de la Reforma No. 450, Piso 13, Col. Juárez, Del. Cuauhtémoc.
+					Distrito Federal CP. 06600 <!--[1..1] Localidad de acuerdo al catálogo de INEGI-->
+					<precinct>0000</precinct>
+					<!--[1..1] Muncipio de acuerdo al catálogo de INEGI -->
+					<county>000</county>
+					<!--[1..1] Entidad de acuerdo al catálogo de INEGI-->
+					<state>09</state>
+					<!--[1..1] Código Postal de acuerdo al catálogo de SEPOMEX-->
+					<postalCode>06600</postalCode>
+					<!--[1..1] Clave del país de acuerdo al catálogo de nacionalidades RENAPO-->
+					<country>MEX</country>
+				</addr>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
+
+	<!-- [1..1] Destinatario de esta nota (Medico solicitante) -->
+	<informationRecipient>
+		<intendedRecipient>
+			<!-- [0..1]  Identificación del médico por cédula profesional -->
+			<id root="2.16.840.1.113883.3.215.12.18" extension="{Solicitante Cedula profesional}"/>
+			<!-- [1..1] Nombre completo del médico consultado. Importante para poder mostrarlo en la cabecera del documento renderizado a html/pdf-->
+			<informationRecipient>
+				<name>
+					<given>{Solicitante Nombre}</given>
+					<family>{Solicitante Primer apellido}</family>
+					<!-- [0..1] -->
+					<family>{Solicitante Segundo apellido}</family>
+				</name>
+			</informationRecipient>
+			<!-- [1..1] Establecimiento donde está el médico consultado-->
+			<receivedOrganization>
+				<!-- [1..1] OID de la organziación a la que pertenece el médico consultado -->
+				<id root="{OID Prestador de servicios de salud Solicitante}"/>
+				<!-- Nombre de la organziación a la que pertenece el médico consultado -->
+				<name>{Solicitante Prestador de servicios de salud}</name>
+			</receivedOrganization>
+		</intendedRecipient>
+	</informationRecipient>
+
+	<!-- [1..1] Responsable legal "firmante" del documento (médico consultado)-->
+	<legalAuthenticator>
+		<!-- [1..1] Fecha de firma el documento. 
+			 Es la misma que el atributo ClinicalDocument/effectiveTime/@value-->
+		<time value="{Fecha y hora de documento}"/>
+		<!-- [1..1] Documento está firmado (Valor Fijo). -->
+		<signatureCode code="S"/>
+		<!-- Médico consultado -->
+		<assignedEntity>
+			<!-- [1..1]  Identificación por usuario en sistema solicitante -->
+			<id root="{OID Usuarios del sistema}"
+				extension="{Consultado Identificador en el sistema}"/>
+			<!-- [1..1]  Identificación del médico por cédula profesional -->
+			<id root="2.16.840.1.113883.3.215.12.18" extension="{Consultado Cedula profesional}"/>
+			<!-- [0..1] Especialidad médica. -->
+			<code code="{Consultado Especialidad Clave}" codeSystem="2.16.840.1.113883.3.215.3.12.9"
+				displayName="{Consultado Especialidad}"/>
+			<!-- [1..1] Dirección del autor (Valor Fijo a null). -->
+			<addr nullFlavor="UNK"/>
+			<!-- [1..1] Nombre completo del médico. Importante para poder mostrarlo en la cabecera del documento renderizado a html/pdf-->
+			<assignedPerson>
+				<name>
+					<given>{Consultado Nombre}</given>
+					<family>{Consultado Primer apellido}</family>
+					<!-- [0..1] -->
+					<family>{Consultado Segundo apellido}</family>
+				</name>
+			</assignedPerson>
+			<!-- [1..1] Establecimiento donde están el médico solicitante y el paciente -->
+			<representedOrganization>
+				<!-- [1..1]  OID de la organización a la que pertenece el autor del sistema-->
+				<id root="{OID Prestador de servicios de salud Consultado}"/>
+				<name>{Consultado Prestador de servicios de salud}</name>
+			</representedOrganization>
+		</assignedEntity>
+	</legalAuthenticator>
+
+	<!-- [1..1] Responsable legal "firmante" del documento -->
+	<authenticator>
+		<!-- [1..1] Fecha de firma el documento. 
+			 Es la misma que el atributo ClinicalDocument/effectiveTime/@value-->
+		<time value="{Fecha y hora de documento}"/>
+		<!-- [1..1] Documento está firmado (Valor Fijo). -->
+		<signatureCode code="S"/>
+		<!-- Médico consultado -->
+		<assignedEntity>
+			<!-- [1..1]  Identificación por usuario en sistema solicitante -->
+			<id root="{OID Usuarios del sistema}"
+				extension="{Consultado Identificador en el sistema}"/>
+			<!-- [1..1]  Identificación del médico por cédula profesional -->
+			<id root="2.16.840.1.113883.3.215.12.18" extension="{Consultado Cedula profesional}"/>
+			<!-- [0..1] Especialidad médica. -->
+			<code code="{Consultado Especialidad Clave}" codeSystem="2.16.840.1.113883.3.215.3.12.9"
+				displayName="{Consultado Especialidad}"/>
+			<!-- [1..1] Dirección del autor (Valor Fijo a null). -->
+			<addr nullFlavor="UNK"/>
+			<!-- [1..1] Nombre completo del médico. Importante para poder mostrarlo en la cabecera del documento renderizado a html/pdf-->
+			<assignedPerson>
+				<name>
+					<given>{Consultado Nombre}</given>
+					<family>{Consultado Primer apellido}</family>
+					<!-- [0..1] -->
+					<family>{Consultado Segundo apellido}</family>
+				</name>
+			</assignedPerson>
+			<!-- [1..1] Establecimiento donde están el médico solicitante y el paciente -->
+			<representedOrganization>
+				<!-- [1..1]  OID de la organización a la que pertenece el autor del sistema-->
+				<id root="{OID Prestador de servicios de salud Consultado}"/>
+				<name>{Consultado Prestador de servicios de salud}</name>
+			</representedOrganization>
+		</assignedEntity>
+	</authenticator>
+
+
+	<!-- [1..1] Solicitud de servicio relacionada -->
+	<inFulfillmentOf>
+		<order>
+			<!-- [1..1] Identificación en el sistema solicitante -->
+			<id root="{OID Folio de ordenes de interconsulta}"
+				extension="{Folio de orden de interconsulta}"/>
+		</order>
+	</inFulfillmentOf>
+
+	<!-- [1..1] Datos del encuentro (Interconsulta a distancia)-->
+	<componentOf>
+		<encompassingEncounter>
+			<!-- [1..1] Identificador del encuentro de salud en el sistema consultado-->
+			<id root="{OID Actos clinicos del sistema}" extension="{Identificador del acto clinico}"/>
+			<!-- [1..1] Tipo de acto: VR - Virtual (Telesalud) -->
+			<code codeSystem="2.16.840.1.113883.5.4" codeSystemName="actCode" code="VR" displayName="Virtual"/>
+			<effectiveTime>
+				<!-- [1..1] Momento de inicio -->
+				<low value="{Inicio de la atencion}"/>
+				<!-- [0..1] Momento de fin <high value="{Fin de la atencion}"/> -->				
+			</effectiveTime>
+
+			<!-- Datos del responsable médico de la interconsulta (médico, establecimiento y organización solicitantes)-->
+			<responsibleParty>
+				<assignedEntity>
+					<!-- [0..1]  Identificación por usuario en sistema solicitante 
+					<id root="{OID Usuarios del sistema}"
+						extension="{Solicitante Identificador en el sistema}"/>
+						-->
+					<!-- [1..1]  Identificación del médico por cédula profesional -->
+					<id root="2.16.840.1.113883.3.215.12.18"
+						extension="{Solicitante Cedula profesional}"/>
+					<!-- [1..1] Nombre completo del médico solicitante -->
+					<assignedPerson>
+						<name>
+							<given>{Solicitante Nombre}</given>
+							<family>{Solicitante Primer apellido}</family>
+							<!-- [0..1] -->
+							<family>{Solicitante Segundo apellido}</family>
+						</name>
+					</assignedPerson>
+					<representedOrganization>
+						<!-- [1..1]  OID de la organización a la que pertenece el médico solicitante-->
+						<id root="{OID Prestador de servicios de salud Solicitante}"/>
+						<!-- [1..1]  Nombre de la organización a la que pertenece el médico solicitante-->
+						<name>{Solicitante Prestador de servicios de salud}</name>
+					</representedOrganization>
+				</assignedEntity>
+			</responsibleParty>
+			
+			<!-- [1..1] Establecimiento donde están el médico solicitante y el paciente -->
+			<location>
+				<healthCareFacility>
+					<!-- [1..1] CLUES del establecimiento -->
+					<id root="2.16.840.1.113883.4.631" extension="{Solicitante CLUES}"/>							
+					<location>
+						<!-- Nombre del establecimiento -->
+						<name>{Solicitante Establecimiento}</name>
+						<!-- [0..1] Dirección del establecimiento  
+									En caso de no contar con el domicilio del establecimiento donde está el paciente sustituir por <addr nullFlavor="UNK"/>-->
+						<addr>
+							<!--[0..1] Domicilio del establecimiento escrito en forma legible de acuerdo a los valores codificados.-->
+							{Solicitante Establecimiento Domicilio legible} <!--[1..1] Localidad de acuerdo al catálogo de INEGI-->
+							<precinct>{Paciente Domicilio Localidad}</precinct>
+							<!--[1..1] Muncipio de acuerdo al catálogo de INEGI -->
+							<county>{Solicitante Establecimiento Domicilio Municipio}</county>
+							<!--[1..1] Entidad de acuerdo al catálogo de INEGI-->
+							<state>{Solicitante Establecimiento Domicilio Entidad}</state>
+							<!--[1..1] Código Postal de acuerdo al catálogo de SEPOMEX-->
+							<postalCode>{Solicitante Establecimiento Domicilio CP}</postalCode>
+							<!--[1..1] Clave del país de acuerdo al catálogo de nacionalidades RENAPO-->
+							<country>{Solicitante Establecimiento Domicilio Pais}</country>
+						</addr>
+					</location>
+				</healthCareFacility>
+			</location>
+		</encompassingEncounter>
+	</componentOf>
+
+
+	<!-- 
+		CUERPO ESTRUCTURADO.
+		
+		El texto narrativo debe codificarse en formato HL7 Narrative Block.
+		Revisar el estándar para más detalle:
+			HL7 CDA Release 2 (http://www.hl7.org/documentcenter/private/standards/cda/r2/cda_r2_normativewebedition2010.zip)
+		Si no se requieren decoraciones puede insertarse directamente el texto "plano".	
+		Si por algunas de las secciones no se dispone del contenido, ya sea porque se desconoce o no se ha preguntado al paciente,
+		indicar esta situación como texto de la sección.
+	-->
+
+	<component>
+		<structuredBody>
+
+			<!-- [1..1] SECCIÓN MOTIVO RESUMEN DEL INTERROGATORIO   -->
+			<component>
+				<section>
+					<!-- [1..1] Tipo de sección LOINC -->
+					<code code="10164-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+						displayName="Hisotry of Present Ilness"/>
+					<!-- [1..1] Título de la sección -->
+					<title>Resumen del interrogatorio</title>
+					<!-- [1..1] Texto -->
+					<text>{Resumen del interrogatorio}</text>
+				</section>
+			</component>
+
+			<!-- [1..1] SECCIÓN IMPRESIÓN DIAGNÓSTICA -->
+			<component>
+				<section>
+					<!-- [1..1] Tipo de sección LOINC -->
+					<code code="51848-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+						displayName="Assesment"/>
+					<!-- [1..1] Título de la sección -->
+					<title>Impresión diagnóstica</title>
+					<!-- [1..1] Texto -->
+					<text>{Impresion diagnostica}</text>
+				</section>
+			</component>
+
+			<!-- [1..1] SECCIÓN ORDENES Y PLAN DE TRATAMIENTO -->
+			<component>
+				<section>
+					<!-- [1..1] Tipo de sección LOINC -->
+					<code code="18776-5" codeSystem="2.16.840.1.113883.6.1"
+						codeSystemName="LOINC" displayName="Plan of Care"/>
+					<!-- [1..1] Título de la sección -->
+					<title>Ordenes, Plan de tratamiento y recomendaciones terapéuticas</title>
+					<!-- [1..1] Texto -->
+					<text>
+						<paragraph>{Ordenes}</paragraph>
+						<paragraph>{Plan de tratamiento}</paragraph>
+					</text>
+				</section>
+			</component>
+
+		</structuredBody>
+	</component>
+</ClinicalDocument>

@@ -46,5 +46,9 @@
     <Compile Include="Helper\CdaHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="cda_xml\plantilla_nota_respuesta.xml" />
+    <Content Include="cda_xml\plantilla_nota_solicitud.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
