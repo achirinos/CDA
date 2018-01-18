@@ -103,8 +103,14 @@ namespace Lumed.Interop.Cenetec.Helpers
         // Authenticator
         public static string AuthenticatorTimePath = "ns:ClinicalDocument/ns:authenticator/ns:time";
         public static string AuthenticatorAssignedSystemIdPath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:id[1]";
+        public static string AuthenticatorProfessionalLicensePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:id[2]";
+        public static string AuthenticarotSpecialtyPath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:code";
+        public static string AuthenticatorGivenNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:given";
+        public static string AuthenticatorLastNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:family[1]";
+        public static string AuthenticatorSureNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:assignedPerson/ns:family[2]";
+        public static string AuthenticatorOrganizationIdPath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:representedOrganization/ns:id";
+        public static string AuthenticatorOrganizationNamePath = "ns:ClinicalDocument/ns:authenticator/ns:assignedEntity/ns:representedOrganization/ns:name";
         
-
 
         public static XmlNamespaceManager XmlNamespaceManager { get; private set; }
 
@@ -160,7 +166,7 @@ namespace Lumed.Interop.Cenetec.Helpers
             confidentialityCodeElement.Attribute(XName.Get("code")).Value = confidentialityCode;
         }
 
-        public static void UpdatePatient(XDocument xdoc, string oidSystemPatients, Person person)
+        public static void UpdatePatient(XDocument xdoc, string oidSystemPatients, Person person, string gender, string civilState, string religion, string ethnicity, string state, string nationality)
         {
             var idElement = xdoc.XPathSelectElement(PatientIdPath, XmlNamespaceManager);
             idElement.Attribute("root").Value = oidSystemPatients;
@@ -189,26 +195,26 @@ namespace Lumed.Interop.Cenetec.Helpers
             surnameElement.Value = person.Surname;
 
             var genderElement = xdoc.XPathSelectElement(PatientGenderPath, XmlNamespaceManager);
-            genderElement.Attribute("code").Value = person.GenderID; // ToDo
+            genderElement.Attribute("code").Value = gender;
 
             var birthTimeElement = xdoc.XPathSelectElement(PatientBirthTimePath, XmlNamespaceManager);
             birthTimeElement.Attribute("value").Value = GetFormattedDateTime(person.BirthDate);
 
             var maritalStatusCodeElement = xdoc.XPathSelectElement(PatientMaritalStatusCodePath, XmlNamespaceManager);
-            maritalStatusCodeElement.Attribute("code").Value = person.CivilStateID; // ToDo
+            maritalStatusCodeElement.Attribute("code").Value = civilState;
 
             var religiousAffiliationCodeElement = xdoc.XPathSelectElement(PatientReligiousAffiliationCodePath,
                 XmlNamespaceManager);
-            religiousAffiliationCodeElement.Attribute("code").Value = person.ReligionID; // ToDo
+            religiousAffiliationCodeElement.Attribute("code").Value = religion;
 
             var ethnicGroupCodeElement = xdoc.XPathSelectElement(PatientEthnicGroupCodePath, XmlNamespaceManager);
-            ethnicGroupCodeElement.Attribute("code").Value = person.EthnicityID; //ToDo
+            ethnicGroupCodeElement.Attribute("code").Value = ethnicity;
 
             var birthplaceStateElement = xdoc.XPathSelectElement(PatientBirthplaceStatePath, XmlNamespaceManager);
-            birthplaceStateElement.Value = "Estado"; // ToDo
+            birthplaceStateElement.Value = state;
 
             var birthplaceCountryElement = xdoc.XPathSelectElement(PatientBirthplaceCountryPath, XmlNamespaceManager);
-            birthplaceCountryElement.Value = person.NationalityID; // ToDo
+            birthplaceCountryElement.Value = nationality;
         }
 
         public static void UpdateAuthor(XDocument xdoc, string oidSystemUsers, Doctor doctor, DateTime dateTime, string oidInstitution, string authorOrganizationName)
@@ -326,9 +332,32 @@ namespace Lumed.Interop.Cenetec.Helpers
             // TODO LDE
         }
 
-        public static void UpdateAuthenticator(XDocument xdoc)
+        public static void UpdateAuthenticator(XDocument xdoc, DateTime dateTime, string oidSystemUsers, string userID, Doctor authenticator, string organizationId, string organizationName)
         {
-            
+            var timeElement = xdoc.XPathSelectElement(AuthenticatorTimePath, XmlNamespaceManager);
+            timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+
+            var idElement = xdoc.XPathSelectElement(AuthenticatorOrganizationIdPath, XmlNamespaceManager);
+            idElement.Attribute("root").Value = oidSystemUsers;
+            idElement.Attribute("extension").Value = userID;
+
+            var licenseElement = xdoc.XPathSelectElement(AuthenticatorProfessionalLicensePath, XmlNamespaceManager);
+            licenseElement.Attribute("root").Value = authenticator.ProfessionalLicense;
+
+            var givenElement = xdoc.XPathSelectElement(AuthenticatorGivenNamePath, XmlNamespaceManager);
+            givenElement.Value = string.Format("{0} {1}", authenticator.FirstName, authenticator.MiddleName);
+
+            var lastNameElement = xdoc.XPathSelectElement(AuthenticatorLastNamePath, XmlNamespaceManager);
+            lastNameElement.Value = authenticator.LastName;
+
+            var surenameElement = xdoc.XPathSelectElement(AuthenticatorSureNamePath, XmlNamespaceManager);
+            surenameElement.Value = authenticator.Surname;
+
+            var organizationIdElement = xdoc.XPathSelectElement(AuthenticatorOrganizationIdPath, XmlNamespaceManager);
+            organizationIdElement.Attribute("root").Value = organizationId;
+
+            var organizationNameElement = xdoc.XPathSelectElement(AuthenticatorOrganizationNamePath, XmlNamespaceManager);
+            organizationNameElement.Value = organizationName;
         }
        
         public static void UpdateInFulfillmentOf(XDocument xdoc)
@@ -337,16 +366,22 @@ namespace Lumed.Interop.Cenetec.Helpers
         }
 
 
-        public static string GetFormattedDateTime(DateTime dateTime)
-        {           
-            var year = dateTime.Year.ToString("0000");
-            var month = dateTime.Month.ToString("00");
-            var day = dateTime.Day.ToString("00");
-            var hour = dateTime.Hour.ToString("00");
-            var minute = dateTime.Minute.ToString("00");
-            var second = dateTime.Second.ToString("00");
+        public static string GetFormattedDateTime(DateTime? dateTime)
+        {
+            string value = "";
+            if (dateTime.HasValue)
+            {
+                var year = dateTime.Value.Year.ToString("0000");
+                var month = dateTime.Value.Month.ToString("00");
+                var day = dateTime.Value.Day.ToString("00");
+                var hour = dateTime.Value.Hour.ToString("00");
+                var minute = dateTime.Value.Minute.ToString("00");
+                var second = dateTime.Value.Second.ToString("00");
 
-            return $"{year}{month}{day}{hour}{minute}{second}";
+                value = $"{year}{month}{day}{hour}{minute}{second}";
+            }
+
+            return value;
         }
     }
 }

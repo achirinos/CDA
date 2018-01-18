@@ -50,5 +50,8 @@
     <Content Include="cda_xml\plantilla_nota_respuesta.xml" />
     <Content Include="cda_xml\plantilla_nota_solicitud.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cda_xml\cda\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
