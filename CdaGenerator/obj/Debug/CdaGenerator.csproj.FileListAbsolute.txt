@@ -1,0 +1,8 @@
+C:\Source\CdaGenerator\CdaGenerator\obj\Debug\CdaGenerator.csprojResolveAssemblyReference.cache
+C:\Source\CdaGenerator\CdaGenerator\obj\Debug\CdaGenerator.csproj.CoreCompileInputs.cache
+C:\Source\CdaGenerator\CdaGenerator\bin\Debug\CdaGenerator.dll
+C:\Source\CdaGenerator\CdaGenerator\bin\Debug\CdaGenerator.pdb
+C:\Source\CdaGenerator\CdaGenerator\bin\Debug\Lumed.Entities.dll
+C:\Source\CdaGenerator\CdaGenerator\bin\Debug\Lumed.Entities.pdb
+C:\Source\CdaGenerator\CdaGenerator\obj\Debug\CdaGenerator.dll
+C:\Source\CdaGenerator\CdaGenerator\obj\Debug\CdaGenerator.pdb

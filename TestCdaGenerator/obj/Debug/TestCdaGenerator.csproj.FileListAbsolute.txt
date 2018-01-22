@@ -1,0 +1,9 @@
+C:\Source\CdaGenerator\TestCdaGenerator\bin\Debug\TestCdaGenerator.exe.config
+C:\Source\CdaGenerator\TestCdaGenerator\bin\Debug\TestCdaGenerator.exe
+C:\Source\CdaGenerator\TestCdaGenerator\bin\Debug\TestCdaGenerator.pdb
+C:\Source\CdaGenerator\TestCdaGenerator\obj\Debug\TestCdaGenerator.csprojResolveAssemblyReference.cache
+C:\Source\CdaGenerator\TestCdaGenerator\obj\Debug\TestCdaGenerator.csproj.CoreCompileInputs.cache
+C:\Source\CdaGenerator\TestCdaGenerator\obj\Debug\TestCdaGenerator.exe
+C:\Source\CdaGenerator\TestCdaGenerator\obj\Debug\TestCdaGenerator.pdb
+C:\Source\CdaGenerator\TestCdaGenerator\bin\Debug\CdaGenerator.dll
+C:\Source\CdaGenerator\TestCdaGenerator\bin\Debug\CdaGenerator.pdb
