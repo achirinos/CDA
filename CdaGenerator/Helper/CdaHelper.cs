@@ -12,7 +12,7 @@ namespace CdaGenerator.Helper
 {
     public static class CdaHelper
     {
-        private static XNamespace defaultNs = "urn:hl7-org:v3";
+        private static readonly XNamespace DefaultNs = "urn:hl7-org:v3";
         
         public static string HeaderIdPath = "ns:ClinicalDocument/ns:id";
         public static string HeaderSetIdPath = "ns:ClinicalDocument/ns:setId";
@@ -181,7 +181,7 @@ namespace CdaGenerator.Helper
 
         public static XDocument CreateCda(string template)
         {
-            string curFile = @"C:\Source\CdaGenerator\CdaGenerator\" + template;
+            var curFile = @"C:\Users\achir\Source\Repos\CDA\CdaGenerator\" + template;
 
             if (!File.Exists(curFile))
             {
@@ -213,21 +213,29 @@ namespace CdaGenerator.Helper
             DateTime effectiveTime, string confidentialityCode)
         {
             var idElement = xdoc.XPathSelectElement(HeaderIdPath, XmlNamespaceManager);
-            idElement.Attribute(XName.Get("root")).Value = oidSystemDocuments;
-            idElement.Attribute(XName.Get("extension")).Value = systemDocumentId;
+            if (idElement != null)
+            {
+                idElement.Attribute(XName.Get("root")).Value = oidSystemDocuments;
+                idElement.Attribute(XName.Get("extension")).Value = systemDocumentId;
+            }
 
             var setIdElement = xdoc.XPathSelectElement(HeaderSetIdPath, XmlNamespaceManager);
-            setIdElement.Attribute(XName.Get("root")).Value = oidSystemDocuments;
-            setIdElement.Attribute(XName.Get("extension")).Value = systemDocumentId;
+            if (setIdElement != null)
+            {
+                setIdElement.Attribute(XName.Get("root")).Value = oidSystemDocuments;
+                setIdElement.Attribute(XName.Get("extension")).Value = systemDocumentId;
+            }
 
             var titleElement = xdoc.XPathSelectElement(HeaderTitlePath, XmlNamespaceManager);
-            titleElement.Value = systemDocumentTitle;
+            if (titleElement != null) titleElement.Value = systemDocumentTitle;
 
             var effectiveTimeElement = xdoc.XPathSelectElement(HeaderEffectiveTimePath, XmlNamespaceManager);
-            effectiveTimeElement.Attribute(XName.Get("value")).Value = GetFormattedDateTime(effectiveTime);
+            if (effectiveTimeElement != null)
+                effectiveTimeElement.Attribute(XName.Get("value")).Value = GetFormattedDateTime(effectiveTime);
 
             var confidentialityCodeElement = xdoc.XPathSelectElement(HeaderConfidentialityCodePath, XmlNamespaceManager);
-            confidentialityCodeElement.Attribute(XName.Get("code")).Value = confidentialityCode;
+            if (confidentialityCodeElement != null)
+                confidentialityCodeElement.Attribute(XName.Get("code")).Value = confidentialityCode;
         }
 
         public static void UpdatePatient(XDocument xdoc, string oidSystemPatients, string patientId, string patientNationalIdentityCode, 
@@ -236,39 +244,55 @@ namespace CdaGenerator.Helper
             string patientReligion, string patientEthnicity, string patientBirthPlaceState, string patientBirthPlaceCountry)
         {
             var idElement = xdoc.XPathSelectElement(PatientIdPath, XmlNamespaceManager);
-            idElement.Attribute("root").Value = oidSystemPatients;
-            idElement.Attribute("extension").Value = patientId;
-            idElement.Attribute("assigningAuthorityName").Value = patientId;
+            if (idElement != null)
+            {
+                idElement.Attribute("root").Value = oidSystemPatients;
+                idElement.Attribute("extension").Value = patientId;
+                idElement.Attribute("assigningAuthorityName").Value = patientId;
+            }
 
             var nationalIdentifierElement = xdoc.XPathSelectElement(PatientNationalIdentifierPath, XmlNamespaceManager);
-            nationalIdentifierElement.Attribute("extension").Value = patientNationalIdentityCode;
+            if (nationalIdentifierElement != null)
+                nationalIdentifierElement.Attribute("extension").Value = patientNationalIdentityCode;
 
             var addressElement = xdoc.XPathSelectElement(PatientAddressPath, XmlNamespaceManager);
-            addressElement.Value = string.Format("{0} {1}, {2}, {3}, {4}, {5}, {6}, {7}", patientStreet, patientExtrenalNumber, patientInternalNumber, patientNeighborhood, patientMunicipality, patientCity, patientState, patientZipCode);
+            if (addressElement != null)
+                addressElement.Value =
+                    $"{patientStreet} {patientExtrenalNumber}, {patientInternalNumber}, {patientNeighborhood}, {patientMunicipality}, {patientCity}, {patientState}, {patientZipCode}";
 
             var phoneNumberElement = xdoc.XPathSelectElement(PatientPhoneNumberPath, XmlNamespaceManager);
-            phoneNumberElement.Attribute("value").Value = patientPhoneNumber;
+            if (phoneNumberElement != null)
+            {
+                phoneNumberElement.Attribute("value").Value = patientPhoneNumber;
+            }
 
             var emailElement = xdoc.XPathSelectElement(PatientEmailPath, XmlNamespaceManager);
-            emailElement.Attribute("value").Value = patientEmail;
+            if (emailElement != null) emailElement.Attribute("value").Value = patientEmail;
 
             var firstNameElement = xdoc.XPathSelectElement(PatientFirstNamePath, XmlNamespaceManager);
-            firstNameElement.Value = patientFirstName;
+            if (firstNameElement != null) firstNameElement.Value = patientFirstName;
 
             var lastNameElement = xdoc.XPathSelectElement(PatientLastNamePath, XmlNamespaceManager);
-            lastNameElement.Value = patientLastName;
+            if (lastNameElement != null) lastNameElement.Value = patientLastName;
 
             var surnameElement = xdoc.XPathSelectElement(PatientSurnamePath, XmlNamespaceManager);
-            surnameElement.Value = patientSurname;
+            if (surnameElement != null) surnameElement.Value = patientSurname;
 
             var genderElement = xdoc.XPathSelectElement(PatientGenderPath, XmlNamespaceManager);
-            genderElement.Attribute("code").Value = patientGender;
+            if (genderElement != null)
+            {
+                genderElement.Attribute("code").Value = patientGender;
+            }
 
             var birthTimeElement = xdoc.XPathSelectElement(PatientBirthTimePath, XmlNamespaceManager);
-            birthTimeElement.Attribute("value").Value = GetFormattedDateTime(patientBirthDate);
+            if (birthTimeElement != null)
+                birthTimeElement.Attribute("value").Value = GetFormattedDateTime(patientBirthDate);
 
             var maritalStatusCodeElement = xdoc.XPathSelectElement(PatientMaritalStatusCodePath, XmlNamespaceManager);
-            maritalStatusCodeElement.Attribute("code").Value = patientCivilState;
+            if (maritalStatusCodeElement != null)
+            {
+                maritalStatusCodeElement.Attribute("code").Value = patientCivilState;
+            }
 
             var religiousAffiliationCodeElement = xdoc.XPathSelectElement(PatientReligiousAffiliationCodePath,
                 XmlNamespaceManager);
@@ -288,57 +312,82 @@ namespace CdaGenerator.Helper
         public static void UpdateAuthor(XDocument xdoc, string oidSystemUsers, string doctorId, string doctorProfessionalLicense, string doctorFirstName, string doctorMiddleName, string doctorLastName, string doctorSurname, string oidSpecialty, string specialtyName, DateTime dateTime, string oidInstitution, string authorOrganizationName)
         {
             var timeElement = xdoc.XPathSelectElement(AuthorTimePath, XmlNamespaceManager);
-            timeElement.Attribute(XName.Get("value")).Value = GetFormattedDateTime(dateTime);
+            if (timeElement != null) timeElement.Attribute(XName.Get("value")).Value = GetFormattedDateTime(dateTime);
 
             var authorIdElement = xdoc.XPathSelectElement(AuthorIdPath, XmlNamespaceManager);
-            authorIdElement.Attribute(XName.Get("root")).Value = oidSystemUsers;
-            authorIdElement.Attribute(XName.Get("extension")).Value = doctorId;
+            if (authorIdElement != null)
+            {
+                authorIdElement.Attribute(XName.Get("root")).Value = oidSystemUsers;
+                authorIdElement.Attribute(XName.Get("extension")).Value = doctorId;
+            }
 
             var authorProfessionalDocumentElement = xdoc.XPathSelectElement(AuthorProfessionalDocumentPath,
                 XmlNamespaceManager);
-            authorProfessionalDocumentElement.Attribute(XName.Get("extension")).Value = doctorProfessionalLicense;
+            if (authorProfessionalDocumentElement != null)
+                authorProfessionalDocumentElement.Attribute(XName.Get("extension")).Value = doctorProfessionalLicense;
 
             var authorSpecialtyElement = xdoc.XPathSelectElement(AuthorSpecialtyPath, XmlNamespaceManager);
-            authorSpecialtyElement.Attribute(XName.Get("code")).Value = oidSpecialty;
-            authorSpecialtyElement.Attribute(XName.Get("displayName")).Value = specialtyName;
+            if (authorSpecialtyElement != null)
+            {
+                authorSpecialtyElement.Attribute(XName.Get("code")).Value = oidSpecialty;
+                authorSpecialtyElement.Attribute(XName.Get("displayName")).Value = specialtyName;
+            }
 
             var authorNameElement = xdoc.XPathSelectElement(AuthorNamePath, XmlNamespaceManager);
-            authorNameElement.Value = string.Format("{0} {1} {2} {3}", doctorFirstName, doctorMiddleName, doctorLastName, doctorSurname);
+            if (authorNameElement != null)
+                authorNameElement.Value = string.Format("{0} {1} {2} {3}", doctorFirstName, doctorMiddleName,
+                    doctorLastName, doctorSurname);
 
             var authorOrganizationIdElement = xdoc.XPathSelectElement(AuthorOrganizationIdPath, XmlNamespaceManager);
-            authorOrganizationIdElement.Attribute(XName.Get("root")).Value = oidInstitution;
+            if (authorOrganizationIdElement != null)
+                authorOrganizationIdElement.Attribute(XName.Get("root")).Value = oidInstitution;
 
             var authorOrganizationNameElement = xdoc.XPathSelectElement(AuthorOrganizationNamePath, XmlNamespaceManager);
-            authorOrganizationNameElement.Value = authorOrganizationName;
+            if (authorOrganizationNameElement != null) authorOrganizationNameElement.Value = authorOrganizationName;
         }
 
         public static void UpdateSoftware(XDocument xdoc, DateTime dateTime, string oidSystemInstance,
             string softwareName, string oidOrganization, string organizationName)
         {
             var timeElement = xdoc.XPathSelectElement(SoftwareTimePath, XmlNamespaceManager);
-            timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            if (timeElement != null)
+            {
+                timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            }
 
             var softwareIdElement = xdoc.XPathSelectElement(SoftwareIdPath, XmlNamespaceManager);
-            softwareIdElement.Attribute("root").Value = oidSystemInstance;
+            if (softwareIdElement != null)
+            {
+                softwareIdElement.Attribute("root").Value = oidSystemInstance;
+            }
 
             var softwareNameElement = xdoc.XPathSelectElement(SoftwareNamePath, XmlNamespaceManager);
-            softwareNameElement.Value = softwareName;
+            if (softwareNameElement != null) softwareNameElement.Value = softwareName;
 
             var organizationIdElement = xdoc.XPathSelectElement(SoftwareOrganizationIdPath, XmlNamespaceManager);
-            organizationIdElement.Attribute("root").Value = oidOrganization;
+            if (organizationIdElement != null)
+            {
+                organizationIdElement.Attribute("root").Value = oidOrganization;
+            }
 
             var organizationNameElement = xdoc.XPathSelectElement(SoftwareOrganizationNamePath, XmlNamespaceManager);
-            organizationNameElement.Value = organizationName;
+            if (organizationNameElement != null) organizationNameElement.Value = organizationName;
         }
 
         public static void UpdateDataEnterer(XDocument xdoc, DateTime dateTime, string oidSystemUsers, string userID, string userFullName)
         {
             var timeElement = xdoc.XPathSelectElement(DataEntererTimePath, XmlNamespaceManager);
-            timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            if (timeElement != null)
+            {
+                timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            }
 
             var idElement = xdoc.XPathSelectElement(DataEntererIdPath, XmlNamespaceManager);
-            idElement.Attribute("root").Value = oidSystemUsers;
-            idElement.Attribute("extension").Value = userID;
+            if (idElement != null)
+            {
+                idElement.Attribute("root").Value = oidSystemUsers;
+                idElement.Attribute("extension").Value = userID;
+            }
 
             var nameElement = xdoc.XPathSelectElement(DataEntererNamePath, XmlNamespaceManager);
             nameElement.Value = userFullName;
@@ -349,22 +398,28 @@ namespace CdaGenerator.Helper
             string custodianOrganizationCounty, string custodianOrganizationState, string custodianOrganizationPostalCode, string custodianOrganizationCountry)
         {
             var idElement = xdoc.XPathSelectElement(CustodianOrganizationIdPath, XmlNamespaceManager);
-            idElement.Attribute("root").Value = oidCustodianOrganization;
+            if (idElement != null)
+            {
+                idElement.Attribute("root").Value = oidCustodianOrganization;
+            }
 
             var nameElement = xdoc.XPathSelectElement(CustodianOrganizationNamePath, XmlNamespaceManager);
-            nameElement.Value = CustodianOrganizationName;
+            if (nameElement != null) nameElement.Value = CustodianOrganizationName;
 
             var telecomElement = xdoc.XPathSelectElement(CustodianOrganizationTelecomPath, XmlNamespaceManager);
-            telecomElement.Attribute("value").Value = custodianOrganizationTelecom;
+            if (telecomElement != null) telecomElement.Attribute("value").Value = custodianOrganizationTelecom;
 
             var addrElement = xdoc.XPathSelectElement(CustodianOrganizationAddrPath, XmlNamespaceManager);
-            addrElement.Value = custodianOrganizationAddress;
+            if (addrElement != null)
+            {
+                addrElement.Value = custodianOrganizationAddress;
 
-            addrElement.SetElementValue(defaultNs + "precinct", custodianOrganizationPrecinct);
-            addrElement.SetElementValue(defaultNs + "county", custodianOrganizationCounty);
-            addrElement.SetElementValue(defaultNs + "state", custodianOrganizationState);
-            addrElement.SetElementValue(defaultNs + "postalCode", custodianOrganizationPostalCode);
-            addrElement.SetElementValue(defaultNs + "country", custodianOrganizationPrecinct);
+                addrElement.SetElementValue(DefaultNs + "precinct", custodianOrganizationPrecinct);
+                addrElement.SetElementValue(DefaultNs + "county", custodianOrganizationCounty);
+                addrElement.SetElementValue(DefaultNs + "state", custodianOrganizationState);
+                addrElement.SetElementValue(DefaultNs + "postalCode", custodianOrganizationPostalCode);
+                addrElement.SetElementValue(DefaultNs + "country", custodianOrganizationPrecinct);
+            }
         }
 
         // Doctor Remoto
@@ -372,23 +427,31 @@ namespace CdaGenerator.Helper
             string doctorLastName, string doctorSurname, string oidOrganization , string organizationName)
         {
             var idElement = xdoc.XPathSelectElement(RecipientIdPath, XmlNamespaceManager);
-            idElement.Attribute("extension").Value = doctorProfessionalLicense;
+            if (idElement != null)
+            {
+                idElement.Attribute("extension").Value = doctorProfessionalLicense;
+            }
 
             var givenElement = xdoc.XPathSelectElement(RecipientGivenNamePath, XmlNamespaceManager);
-            givenElement.Value = string.Format("{0} {1}", doctorFirstName, doctorMiddleName);
+            if (givenElement != null) givenElement.Value = $"{doctorFirstName} {doctorMiddleName}";
 
             var lastNameElement = xdoc.XPathSelectElement(RecipientLastNamePath, XmlNamespaceManager);
-            lastNameElement.Value = doctorLastName;
+            if (lastNameElement != null) lastNameElement.Value = doctorLastName;
 
             var surenameElement = xdoc.XPathSelectElement(RecipientSurenamePath, XmlNamespaceManager);
-            surenameElement.Value = doctorSurname;
-
+            if (surenameElement != null)
+            {
+                surenameElement.Value = doctorSurname;
+            }
 
             var organizationIdElement = xdoc.XPathSelectElement(RecipientOrganizationIdPath, XmlNamespaceManager);
-            organizationIdElement.Attribute("root").Value = oidOrganization;
+            if (organizationIdElement != null)
+            {
+                organizationIdElement.Attribute("root").Value = oidOrganization;
+            }
 
             var organizationNameElement = xdoc.XPathSelectElement(RecipientOrganizationNamePath, XmlNamespaceManager);
-            organizationNameElement.Value = organizationName;
+            if (organizationNameElement != null) organizationNameElement.Value = organizationName;
         }
         
         // Doctor Solicitante
@@ -398,33 +461,51 @@ namespace CdaGenerator.Helper
         {
 
             var timeElement = xdoc.XPathSelectElement(LegalAuthenticatorTimePath, XmlNamespaceManager);
-            timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            if (timeElement != null)
+            {
+                timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            }
 
             var useridElement = xdoc.XPathSelectElement(LegalAuthenticatorUserIdPath, XmlNamespaceManager);
-            useridElement.Attribute("root").Value = oidSystemUsers;
-            useridElement.Attribute("extension").Value = userId;
+            if (useridElement != null)
+            {
+                useridElement.Attribute("root").Value = oidSystemUsers;
+                useridElement.Attribute("extension").Value = userId;
+            }
 
             var doctoridElement = xdoc.XPathSelectElement(LegalAuthenticatorDoctorIdPath, XmlNamespaceManager);
-            doctoridElement.Attribute("extension").Value = doctorProfessionalLicense;
+            if (doctoridElement != null)
+            {
+                doctoridElement.Attribute("extension").Value = doctorProfessionalLicense;
+            }
 
             var codeElement = xdoc.XPathSelectElement(LegalAuthenticatorCodePath, XmlNamespaceManager);
-            codeElement.Attribute("code").Value = oidSpecialty;
-            codeElement.Attribute("displayName").Value = specialtyName;
+            if (codeElement != null)
+            {
+                codeElement.Attribute("code").Value = oidSpecialty;
+                codeElement.Attribute("displayName").Value = specialtyName;
+            }
 
             var firstnameElement = xdoc.XPathSelectElement(LegalAuthenticatorFirstNamePath, XmlNamespaceManager);
-            firstnameElement.Value = doctorFirstName;
+            if (firstnameElement != null) firstnameElement.Value = doctorFirstName;
 
             var lastNameElement = xdoc.XPathSelectElement(LegalAuthenticatorLastNamePath, XmlNamespaceManager);
-            lastNameElement.Value = doctorLastName;
+            if (lastNameElement != null)
+            {
+                lastNameElement.Value = doctorLastName;
 
-            var surNameElement = xdoc.XPathSelectElement(LegalAuthenticatorSurNamePath, XmlNamespaceManager);
-            lastNameElement.Value = doctorSurname;
+                var surNameElement = xdoc.XPathSelectElement(LegalAuthenticatorSurNamePath, XmlNamespaceManager);
+                lastNameElement.Value = doctorSurname;
+            }
 
             var idOrganizationElement = xdoc.XPathSelectElement(LegalAuthenticatorRepresentedOrganizationIdPath, XmlNamespaceManager);
-            idOrganizationElement.Attribute("root").Value = oidOrganization;
+            if (idOrganizationElement != null)
+            {
+                idOrganizationElement.Attribute("root").Value = oidOrganization;
+            }
 
             var nameOrganizationElement = xdoc.XPathSelectElement(LegalAuthenticatorRepresentedOrganizationNamePath, XmlNamespaceManager);
-            nameOrganizationElement.Value = organizationName;
+            if (nameOrganizationElement != null) nameOrganizationElement.Value = organizationName;
         }
         
         // Medico Solicitante
@@ -433,91 +514,110 @@ namespace CdaGenerator.Helper
             string doctorLastName, string doctorSurname, string oidOrganization, string organizationName)
         {
             var timeElement = xdoc.XPathSelectElement(AuthenticatorTimePath, XmlNamespaceManager);
-            timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            if (timeElement != null)
+            {
+                timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            }
 
             var idElement = xdoc.XPathSelectElement(AuthenticatorAssignedSystemIdPath, XmlNamespaceManager);
-            idElement.Attribute("root").Value = oidSystemUsers;
-            idElement.Attribute("extension").Value = userID;
+            if (idElement != null)
+            {
+                idElement.Attribute("root").Value = oidSystemUsers;
+                idElement.Attribute("extension").Value = userID;
+            }
 
             var licenseElement = xdoc.XPathSelectElement(AuthenticatorProfessionalLicensePath, XmlNamespaceManager);
-            licenseElement.Attribute("extension").Value = doctorProfessionalLicense;
+            if (licenseElement != null)
+            {
+                licenseElement.Attribute("extension").Value = doctorProfessionalLicense;
+            }
 
             var specialtyElement = xdoc.XPathSelectElement(AuthenticarotSpecialtyPath, XmlNamespaceManager);
-            specialtyElement.Attribute("code").Value = oidSpecialty;
-            specialtyElement.Attribute("displayName").Value = specialtyName;            
+            if (specialtyElement != null)
+            {
+                specialtyElement.Attribute("code").Value = oidSpecialty;
+                specialtyElement.Attribute("displayName").Value = specialtyName;
+            }
 
             var givenElement = xdoc.XPathSelectElement(AuthenticatorGivenNamePath, XmlNamespaceManager);
-            givenElement.Value = string.Format("{0} {1}", doctorFirstName, doctorMiddleName);
+            if (givenElement != null) givenElement.Value = $"{doctorFirstName} {doctorMiddleName}";
 
             var lastNameElement = xdoc.XPathSelectElement(AuthenticatorLastNamePath, XmlNamespaceManager);
-            lastNameElement.Value = doctorLastName;
+            if (lastNameElement != null) lastNameElement.Value = doctorLastName;
 
             var surenameElement = xdoc.XPathSelectElement(AuthenticatorSurenamePath, XmlNamespaceManager);
-            surenameElement.Value = doctorSurname;
+            if (surenameElement != null) surenameElement.Value = doctorSurname;
 
             var organizationIdElement = xdoc.XPathSelectElement(AuthenticatorOrganizationIdPath, XmlNamespaceManager);
-            organizationIdElement.Attribute("root").Value = oidOrganization;
+            if (organizationIdElement != null) organizationIdElement.Attribute("root").Value = oidOrganization;
 
             var organizationNameElement = xdoc.XPathSelectElement(AuthenticatorOrganizationNamePath, XmlNamespaceManager);
-            organizationNameElement.Value = organizationName;
+            if (organizationNameElement != null) organizationNameElement.Value = organizationName;
         }
 
         public static void UpdateInFulfillmentOf(XDocument xdoc, string oidOrders, string orderId)
         {
             var idElement = xdoc.XPathSelectElement(InFulfillmentOfIdPath, XmlNamespaceManager);
-            idElement.Attribute("root").Value = oidOrders;
-            idElement.Attribute("extension").Value = orderId;
+            if (idElement != null)
+            {
+                idElement.Attribute("root").Value = oidOrders;
+                idElement.Attribute("extension").Value = orderId;
+            }
         }
 
         // Request
-        public static void UpdateComponent(XDocument xdoc, string reasonOfReferal, string interrogatory, 
+        public static void UpdateComponent(XDocument xdoc, string reasonOfReferal, 
+            string interrogatory, 
             string allergies, string procedures, string medication, string physicalExam,
             string vitalSigns, string results, string assesment)
         {
 
             var reasonElement = xdoc.XPathSelectElement(ComponentReasonOfReferalPath, XmlNamespaceManager);
-            reasonElement.Value = reasonOfReferal;
+            if (reasonElement != null) reasonElement.Value = reasonOfReferal;
 
             var textinterrogatoryElement = xdoc.XPathSelectElement(ComponentInterrogatoryPath, XmlNamespaceManager);
-            textinterrogatoryElement.Value = interrogatory;
+            if (textinterrogatoryElement != null) textinterrogatoryElement.Value = interrogatory;
 
             var allergiesElement = xdoc.XPathSelectElement(ComponentAllergiesPath, XmlNamespaceManager);
-            allergiesElement.Value = allergies;
+            if (allergiesElement != null) allergiesElement.Value = allergies;
 
             var proceduresElement = xdoc.XPathSelectElement(ComponentProceduresPath, XmlNamespaceManager);
-            proceduresElement.Value = procedures;
+            if (proceduresElement != null) proceduresElement.Value = procedures;
 
             var medicationElement = xdoc.XPathSelectElement(ComponentMedicationsPath, XmlNamespaceManager);
-            medicationElement.Value = medication;
+            if (medicationElement != null) medicationElement.Value = medication;
 
             var physicalexamElement = xdoc.XPathSelectElement(ComponentPhysicalExamPath, XmlNamespaceManager);
-            physicalexamElement.Value = physicalExam;
+            if (physicalexamElement != null) physicalexamElement.Value = physicalExam;
 
             var vitalsignsElement = xdoc.XPathSelectElement(ComponentVitalSignsPath, XmlNamespaceManager);
-            vitalsignsElement.Value = vitalSigns;
+            if (vitalsignsElement != null) vitalsignsElement.Value = vitalSigns;
 
             var resultsElement = xdoc.XPathSelectElement(ComponentResultsPath, XmlNamespaceManager);
-            resultsElement.Value = results;
+            if (resultsElement != null) resultsElement.Value = results;
 
             var assesmentElement = xdoc.XPathSelectElement(ComponentAssesmentPath, XmlNamespaceManager);
-            assesmentElement.Value = assesment;
-
+            if (assesmentElement != null) assesmentElement.Value = assesment;
         }
         
-        // Response
-        public static void UpdateComponent(XDocument xdoc, string ComponentInterrogatoryText, string ComponentDiagnosticText, string ComponentOrdersText, string ComponentTreatmentText)
+        // CdaResponse
+        public static void UpdateComponent(XDocument xdoc, 
+            string ComponentInterrogatoryText, 
+            string ComponentDiagnosticText, 
+            string ComponentOrdersText, 
+            string ComponentTreatmentText)
         {
             var textinterrogatoryElement = xdoc.XPathSelectElement(ComponentResponseTextInterrogatoryPath, XmlNamespaceManager);
-            textinterrogatoryElement.Value = ComponentInterrogatoryText;
+            if (textinterrogatoryElement != null) textinterrogatoryElement.Value = ComponentInterrogatoryText;
 
             var textdiagnosticElement = xdoc.XPathSelectElement(ComponentResponseTextDiagnosticPath, XmlNamespaceManager);
-            textdiagnosticElement.Value = ComponentDiagnosticText;
+            if (textdiagnosticElement != null) textdiagnosticElement.Value = ComponentDiagnosticText;
 
             var ordersElement = xdoc.XPathSelectElement(ComponentResponseOrdersPath, XmlNamespaceManager);
-            ordersElement.Value = ComponentOrdersText;
+            if (ordersElement != null) ordersElement.Value = ComponentOrdersText;
 
             var treatmentElement = xdoc.XPathSelectElement(ComponentResponseTreatmentPlanPath, XmlNamespaceManager);
-            treatmentElement.Value = ComponentTreatmentText;
+            if (treatmentElement != null) treatmentElement.Value = ComponentTreatmentText;
         }
 
         // Doctor solicitante
@@ -528,49 +628,67 @@ namespace CdaGenerator.Helper
             string organizationCounty, string organizationState, string organizationPostalCode, string organizationCountry)
         {
             var idElement = xdoc.XPathSelectElement(ComponentOfClinicalActIdPath, XmlNamespaceManager);
-            idElement.Attribute("root").Value = oidClinicalActs;
-            idElement.Attribute("extension").Value = clinicalActId;
+            if (idElement != null)
+            {
+                idElement.Attribute("root").Value = oidClinicalActs;
+                idElement.Attribute("extension").Value = clinicalActId;
+            }
 
             var timeElement = xdoc.XPathSelectElement(ComponentOfTimePath, XmlNamespaceManager);
-            timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            if (timeElement != null)
+            {
+                timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
+            }
 
             var systemIdElement = xdoc.XPathSelectElement(ComponentOfSystemIdPath, XmlNamespaceManager);
-            systemIdElement.Attribute("root").Value = oidSystemUsers;
-            systemIdElement.Attribute("extension").Value = userID;
+            if (systemIdElement != null)
+            {
+                systemIdElement.Attribute("root").Value = oidSystemUsers;
+                systemIdElement.Attribute("extension").Value = userID;
+            }
 
             var professionalLicensePath = xdoc.XPathSelectElement(ComponentOfProfessionalLicensePath, XmlNamespaceManager);
             if(professionalLicensePath!=null)
                 professionalLicensePath.Attribute("extension").Value = doctorProfessionalLicense;
 
             var givenElement = xdoc.XPathSelectElement(ComponentOfGivenNamePath, XmlNamespaceManager);
-            givenElement.Value = string.Format("{0} {1}", doctorFirstName, doctorMiddleName);
+            if (givenElement != null) givenElement.Value = $"{doctorFirstName} {doctorMiddleName}";
 
             var lastNameElement = xdoc.XPathSelectElement(ComponentOfLastNamePath, XmlNamespaceManager);
-            lastNameElement.Value = doctorLastName;
+            if (lastNameElement != null) lastNameElement.Value = doctorLastName;
 
             var surenameElement = xdoc.XPathSelectElement(ComponentOfurenamePath, XmlNamespaceManager);
-            surenameElement.Value = doctorSurname;
+            if (surenameElement != null) surenameElement.Value = doctorSurname;
 
             var organizationIdElement = xdoc.XPathSelectElement(ComponentOfOrganizationIdPath, XmlNamespaceManager);
-            organizationIdElement.Attribute("root").Value = oidOrganization;
+            if (organizationIdElement != null)
+            {
+                organizationIdElement.Attribute("root").Value = oidOrganization;
+            }
 
             var organizationNameElement = xdoc.XPathSelectElement(ComponentOfOrganizationNamePath, XmlNamespaceManager);
-            organizationNameElement.Value = organizationName;
+            if (organizationNameElement != null) organizationNameElement.Value = organizationName;
 
             var locationIdElment = xdoc.XPathSelectElement(ComponentOfLocationIdPath, XmlNamespaceManager);
-            locationIdElment.Attribute("extension").Value = clues;
+            if (locationIdElment != null)
+            {
+                locationIdElment.Attribute("extension").Value = clues;
 
-            var locationNameElement = xdoc.XPathSelectElement(ComponentOfLocationNamePath, XmlNamespaceManager);
-            locationIdElment.Value = locationName;
+                var locationNameElement = xdoc.XPathSelectElement(ComponentOfLocationNamePath, XmlNamespaceManager);
+                locationIdElment.Value = locationName;
+            }
 
             var locationAddrElement = xdoc.XPathSelectElement(ComponentOfLocationAddrPath, XmlNamespaceManager);
-            locationAddrElement.Value = organizationAddress;
-            
-            locationAddrElement.SetElementValue(defaultNs + "precinct", organizationPrecinct);
-            locationAddrElement.SetElementValue(defaultNs + "county", organizationCounty);
-            locationAddrElement.SetElementValue(defaultNs + "state", organizationState);
-            locationAddrElement.SetElementValue(defaultNs + "postalCode", organizationPostalCode);
-            locationAddrElement.SetElementValue(defaultNs + "country", organizationPrecinct);
+            if (locationAddrElement != null)
+            {
+                locationAddrElement.Value = organizationAddress;
+
+                locationAddrElement.SetElementValue(DefaultNs + "precinct", organizationPrecinct);
+                locationAddrElement.SetElementValue(DefaultNs + "county", organizationCounty);
+                locationAddrElement.SetElementValue(DefaultNs + "state", organizationState);
+                locationAddrElement.SetElementValue(DefaultNs + "postalCode", organizationPostalCode);
+                locationAddrElement.SetElementValue(DefaultNs + "country", organizationPrecinct);
+            }
         }
 
         /*
@@ -625,7 +743,7 @@ namespace CdaGenerator.Helper
 
         public static string GetFormattedDateTime(DateTime? dateTime)
         {
-            string value = string.Empty;
+            var value = string.Empty;
 
             if (dateTime.HasValue)
             {
@@ -637,8 +755,6 @@ namespace CdaGenerator.Helper
                 var second = dateTime.Value.Second.ToString("00");
 
                 value = $"{year}{month}{day}{hour}{minute}{second}";
-
-                // [0-9]{1,8}|([0-9]{9,14}|[0-9]{14,14}\.[0-9]+)([+\-][0-9]{1,4})?' 
             }
 
             return value;            

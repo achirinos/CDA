@@ -4,143 +4,144 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CdaGenerator
 {
-    public class CdaAction
+    public partial class Cda
     {
+
         
-        private const string OidInstitution = "2.16.840.1.113883.3.215.6.99.5";
-        private const string OidSystemDocuments = "2.16.840.1.113883.3.215.6.99.5.1.1";
-        private const string OidSystemPatients = "2.16.840.1.113883.3.215.6.99.5.1.2";
-        private const string OidSystemUsers = "2.16.840.1.113883.3.215.6.99.5.1.3";
-        private const string OidSystemInstance = "2.16.840.1.113883.3.215.6.99.5.1";
 
-        private const string TemplateRequest = "plantilla_nota_solicitud.xml";
-        private const string TemplateResponse = "plantilla_nota_respuesta.xml";
+        public static void GenerateResponse()
+        {
 
-        public void GenerateResponse() {
+            
 
-            #region
+            /*#region
+
+            CDA cda = new CDA();
 
             // Header
-            string systemDocumentId = "systemDocumentId";
-            string systemDocumentName = "systemDocumentName";
-            DateTime headerDateTime = DateTime.Now;
+            cda.SystemDocumentId = "systemDocumentId";
+            cda.SystemDocumentName = "systemDocumentName";
+            cda.HeaderDateTime = DateTime.Now;
 
             // Patient
-            string patientId = "patientId";
-            string patientNationalIdentityCode = "patientNationalIdentityCode";
-            string patientStreet = "patientStree";
-            string patientExtrenalNumber = "patientExtrenalNumber";
-            string patientInternalNumber = "patientInternalNumber";
-            string patientNeighborhood = "patientNeighborhood";
-            string patientMunicipality = "patientMunicipality";
-            string patientCity = "patientCity";
-            string patientState = "patientState";
-            string patientZipCode = "patientZipCode";
-            string patientPhoneNumber = "patientPhoneNumber";
-            string patientEmail = "patientEmail";
-            string patientFirstName = "patientFirstName";
-            string patientLastName = "patientLastName";
-            string patientSurname = "patientSurname";
-            string patientGender = "patientGender";
-            DateTime patientBirthDate = DateTime.Now;
-            string patientCivilState = "patientCivilState";
-            string patientReligion = "patientReligion";
-            string patientEthnicity = "patientEthnicity";
-            string patientBirthPlaceState = "patientBirthPlaceState";
-            string patientBirthPlaceCountry = "patientBirthPlaceCountry";
+            cda.PatientId = "patientId";
+            cda.PatientNationalIdentityCode = "patientNationalIdentityCode";
+            cda.PatientStreet = "patientStree";
+            cda.PatientExtrenalNumber = "patientExtrenalNumber";
+            cda.PatientInternalNumber = "patientInternalNumber";
+            cda.PatientNeighborhood = "patientNeighborhood";
+            cda.PatientMunicipality = "patientMunicipality";
+            cda.PatientCity = "patientCity";
+            cda.PatientState = "patientState";
+            cda.PatientZipCode = "patientZipCode";
+            cda.PatientPhoneNumber = "patientPhoneNumber";
+            cda.PatientEmail = "patientEmail";
+            cda.PatientFirstName = "patientFirstName";
+            cda.PatientLastName = "patientLastName";
+            cda.PatientSurname = "patientSurname";
+            cda.PatientGender = "patientGender";
+            cda.PatientBirthDate = DateTime.Now;
+            cda.PatientCivilState = "patientCivilState";
+            cda.PatientReligion = "patientReligion";
+            cda.PatientEthnicity = "patientEthnicity";
+            cda.PatientBirthPlaceState = "patientBirthPlaceState";
+            cda.PatientBirthPlaceCountry = "patientBirthPlaceCountry";
 
             // Author
-            string authorDoctorId = "doctorId";
-            string authorDoctorProfessionalLicense = "doctorProfessionalLicense";
-            string authorDoctorFirstName = "doctorFirstName";
-            string authorDoctorMiddleName = "doctorMiddleName";
-            string authorDoctorLastName = "doctorLastName";
-            string authorDoctorSurname = "doctorSurname";
-            string authorOidSpecialty = "oidSpecialty";
-            string authorSpecialtyName = "specialtyName";
-            DateTime authorDateTime = DateTime.Now;
-            string authorOidOrganization = "oidOrganization";
-            string authorOrganizationName = "organizationName";
+            cda.AuthorDoctorId = "doctorId";
+            cda.AuthorDoctorProfessionalLicense = "doctorProfessionalLicense";
+            cda.AuthorDoctorFirstName = "doctorFirstName";
+            cda.AuthorDoctorMiddleName = "doctorMiddleName";
+            cda.AuthorDoctorLastName = "doctorLastName";
+            cda.AuthorDoctorSurname = "doctorSurname";
+            cda.AuthorOidSpecialty = "oidSpecialty";
+            cda.AuthorSpecialtyName = "specialtyName";
+            cda.AuthorDateTime = DateTime.Now;
+            cda.AuthorOidOrganization = "oidOrganization";
+            cda.AuthorOrganizationName = "organizationName";
 
             // custodian
-            string oidCustodianOrganization = "oidCustodianOrganization";
-            string custodianOrganizationName = "CustodianOrganizationName";
-            string custodianOrganizationTelecom = "CustodianOrganizationTelecom";
-            string custodianOrganizationAddress = "CustodianOrganizationAddress";
-            string custodianOrganizationPrecinct = "CustodianOrganizationPrecinct";
-            string custodianOrganizationCounty = "CustodianOrganizationCounty";
-            string custodianOrganizationState = "CustodianOrganizationState";
-            string custodianOrganizationPostalCode = "CustodianOrganizationPostalCode";
-            string custodianOrganizationCountry = "CustodianOrganizationCountry";
+            cda.OidCustodianOrganization = "oidCustodianOrganization";
+            cda.CustodianOrganizationName = "CustodianOrganizationName";
+            cda.CustodianOrganizationTelecom = "CustodianOrganizationTelecom";
+            cda.CustodianOrganizationAddress = "CustodianOrganizationAddress";
+            cda.CustodianOrganizationPrecinct = "CustodianOrganizationPrecinct";
+            cda.CustodianOrganizationCounty = "CustodianOrganizationCounty";
+            cda.CustodianOrganizationState = "CustodianOrganizationState";
+            cda.CustodianOrganizationPostalCode = "CustodianOrganizationPostalCode";
+            cda.CustodianOrganizationCountry = "CustodianOrganizationCountry";
 
             // ComponentOF
 
-            string oidClinicalActs = "oidClinicalActs";
-            string clinicalActId = "clinicalActId";
-            string userId = "userID";
-            string doctorProfessionalLicense = "doctorProfessionalLicense";
-            string doctorFirstName = "doctorFirstName";
-            string doctorMiddleName = "doctorMiddleName";
-            string doctorLastName = "doctorLastName";
-            string doctorSurname = "doctorSurname";
-            string oidOrganization = "oidOrganization";
-            string organizationName = "organizationName";
-            string clues = "clues";
-            string locationName = "locationName";
-            string organizationAddress = "organizationAddress";
-            string organizationPrecinct = "organizationPrecinct";
-            string organizationCounty = "organizationCounty";
-            string organizationState = "organizationState";
-            string organizationPostalCode = "organizationPostalCode";
-            string organizationCountry = "organizationCountry";
+            cda.OidClinicalActs = "oidClinicalActs";
+            cda.ClinicalActId = "clinicalActId";
+            cda.UserId = "userID";
+            cda.DoctorProfessionalLicense = "doctorProfessionalLicense";
+            cda.DoctorFirstName = "doctorFirstName";
+            cda.DoctorMiddleName = "doctorMiddleName";
+            cda.DoctorLastName = "doctorLastName";
+            cda.DoctorSurname = "doctorSurname";
+            cda.OidOrganization = "oidOrganization";
+            cda.OrganizationName = "organizationName";
+            cda.Clues = "clues";
+            cda.LocationName = "locationName";
+            cda.OrganizationAddress = "organizationAddress";
+            cda.OrganizationPrecinct = "organizationPrecinct";
+            cda.OrganizationCounty = "organizationCounty";
+            cda.OrganizationState = "organizationState";
+            cda.OrganizationPostalCode = "organizationPostalCode";
+            cda.OrganizationCountry = "organizationCountry";
 
 
             // Software
-            var softwareName = "Lumed";
-            var dateTime = DateTime.Now;
-            var softwareInstitutionName = "Netemedical";
+           cda.SoftwareName = "Lumed";
+           cda.DateTime = DateTime.Now;
+           cda.SoftwareInstitutionName = "Netemedical";
 
             // Data Enterer
-            var userFullName = "userFullName";
+            cda.UserFullName = "userFullName";
 
             // InformationRecipient            
-            string recipientDoctorProfessionalLicense = "doctorProfessionalLicense";
-            string recipientDoctorFirstName = "doctorFirstName";
-            string recipientDoctorMiddleName = "doctorMiddleName";
-            string recipientDoctorLastName = "doctorLastName";
-            string recipientDoctorSurname = "doctorSurname";
-            DateTime recipientDateTime = DateTime.Now;
-            string recipientOidOrganization = "2.16.840.1.113883.3.215.6.99.5";
-            
-            string recipientOrganizationName = "organizationName";
+            cda.RecipientDoctorProfessionalLicense = "doctorProfessionalLicense";
+            cda.RecipientDoctorFirstName = "doctorFirstName";
+            cda.RecipientDoctorMiddleName = "doctorMiddleName";
+            cda.RecipientDoctorLastName = "doctorLastName";
+            cda.RecipientDoctorSurname = "doctorSurname";
+            cda.RecipientDateTime = DateTime.Now;
+            cda.RecipientOidOrganization = "2.16.840.1.113883.3.215.6.99.5";
 
-            // UpdateLegalAuthenticator
-            var oidSpecialty = "oidSpeialty";
-            var specialtyName = "specialtyName";
+            cda.RecipientOrganizationName = "organizationName";
+
+            // LegalAuthenticator
+            cda.OidSpecialty = "oidSpeialty";
+            cda.SpecialtyName = "specialtyName";
 
             // Component
-            string interrogatory = "interrogatory";
-            string diagnostic = "diagnostic";
-            string orders = "orders";
-            string treatmentPlan = "treatmenPlan";
+            cda.Interrogatory = "interrogatory";
+            cda.Diagnostic = "diagnostic";
+            cda.Orders = "orders";
+            cda.TreatmentPlan = "treatmenPlan";
 
             // UpdateInFulfillmentOf
-            var oidOrders = "oidOrders";
-            var orderId = "orderId";
+            cda.OidOrders = "oidOrders";
+            cda.OrderId = "orderId";
 
             #endregion
 
             var fileName = Path.GetTempFileName();
             var xdoc = CdaHelper.CreateCda(TemplateResponse);
 
+
+
             if (xdoc != null)
             {
-                CdaHelper.UpdateHeader(xdoc, OidSystemDocuments, systemDocumentId, systemDocumentName, headerDateTime, "N");
+                CdaHelper.UpdateHeader(xdoc, OidSystemDocuments, cda.SystemDocumentId, cda.SystemDocumentName, cda.HeaderDateTime, "N");
                 CdaHelper.UpdatePatient(xdoc, OidSystemPatients, patientId, patientNationalIdentityCode, patientStreet, patientExtrenalNumber, patientInternalNumber, patientNeighborhood, patientMunicipality, patientCity, patientState, patientZipCode, patientPhoneNumber, patientEmail, patientFirstName, patientLastName, patientSurname, patientGender, patientBirthDate, patientCivilState, patientReligion, patientEthnicity, patientBirthPlaceState, patientBirthPlaceCountry);
 
                 CdaHelper.UpdateAuthor(xdoc, OidSystemUsers, authorDoctorId, authorDoctorProfessionalLicense, authorDoctorFirstName, authorDoctorMiddleName, authorDoctorLastName, authorDoctorSurname, authorOidSpecialty, authorSpecialtyName, authorDateTime, authorOidOrganization, authorOrganizationName);
@@ -153,7 +154,7 @@ namespace CdaGenerator
 
                 CdaHelper.UpdateInformationRecipient(xdoc, recipientDoctorProfessionalLicense, recipientDoctorFirstName, recipientDoctorMiddleName, recipientDoctorLastName, recipientDoctorSurname, recipientOidOrganization, recipientOrganizationName);
 
-                CdaHelper.UpdateLegalAuthenticator(xdoc, dateTime, OidSystemUsers, userId, doctorProfessionalLicense, oidSpecialty, specialtyName, doctorFirstName, doctorMiddleName, doctorLastName, doctorSurname, oidOrganization, organizationName);
+                CdaHelper.LegalAuthenticator(xdoc, dateTime, OidSystemUsers, userId, doctorProfessionalLicense, oidSpecialty, specialtyName, doctorFirstName, doctorMiddleName, doctorLastName, doctorSurname, oidOrganization, organizationName);
 
                 CdaHelper.UpdateAuthenticator(xdoc, dateTime, OidSystemUsers, userId, doctorProfessionalLicense, oidSpecialty, specialtyName, doctorFirstName, doctorMiddleName, doctorLastName, doctorSurname, oidOrganization, organizationName);
 
@@ -169,8 +170,9 @@ namespace CdaGenerator
                 Console.ReadLine();
             }
         }
-    
-        public void GenerateRequest() {
+
+        public void GenerateRequest()
+        {
 
             #region
 
@@ -267,7 +269,7 @@ namespace CdaGenerator
             string recipientOidOrganization = "oidOrganization";
             string recipientOrganizationName = "organizationName";
 
-            // UpdateLegalAuthenticator
+            // LegalAuthenticator
             var oidSpecialty = "oidSpeialty";
             var specialtyName = "specialtyName";
 
@@ -307,7 +309,7 @@ namespace CdaGenerator
 
                 CdaHelper.UpdateInformationRecipient(xdoc, recipientDoctorProfessionalLicense, recipientDoctorFirstName, recipientDoctorMiddleName, recipientDoctorLastName, recipientDoctorSurname, recipientOidOrganization, recipientOrganizationName);
 
-                CdaHelper.UpdateLegalAuthenticator(xdoc, dateTime, OidSystemUsers, userId, doctorProfessionalLicense, oidSpecialty, specialtyName, doctorFirstName, doctorMiddleName, doctorLastName, doctorSurname, oidOrganization, organizationName);
+                CdaHelper.LegalAuthenticator(xdoc, dateTime, OidSystemUsers, userId, doctorProfessionalLicense, oidSpecialty, specialtyName, doctorFirstName, doctorMiddleName, doctorLastName, doctorSurname, oidOrganization, organizationName);
 
                 CdaHelper.UpdateAuthenticator(xdoc, dateTime, OidSystemUsers, userId, doctorProfessionalLicense, oidSpecialty, specialtyName, doctorFirstName, doctorMiddleName, doctorLastName, doctorSurname, oidOrganization, organizationName);
 
@@ -321,7 +323,7 @@ namespace CdaGenerator
                 Console.WriteLine(fileName);
                 CdaHelper.SaveCda(xdoc, fileName);
                 Console.ReadLine();
-            }
+            }*/
         }
     }
 }
