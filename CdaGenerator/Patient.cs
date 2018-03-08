@@ -14,7 +14,11 @@ namespace CdaGenerator
 
         public string PatientNationalIdentityCode { get; set; }
 
-        public string PatientStreet { get; set; }
+		public string PatientSocialSecurityNumber { get; set; }
+
+		public string PatientExpedientNumber { get; set; }
+
+		public string PatientStreet { get; set; }
 
         public string PatientExtrenalNumber { get; set; }
 
@@ -59,10 +63,12 @@ namespace CdaGenerator
             
         }
 
-        public Patient(string patientId, string patientNationalIdentityCode, string patientStreet, string patientExtrenalNumber, string patientInternalNumber, string patientNeighborhood, string patientMunicipality, string patientCity, string patientState, string patientZipCode, string patientPhoneNumber, string patientEmail, string patientFirstName, string patientLastName, string patientSurname, string patientGender, DateTime patientBirthDate, string patientCivilState, string patientReligion, string patientEthnicity, string patientBirthPlaceState, string patientBirthPlaceCountry)
+		public Patient(string patientId,string patientNationalIdentityCode, string patientSocialSecurityNumber, string patientExpedientNumber, string patientStreet, string patientExtrenalNumber, string patientInternalNumber, string patientNeighborhood, string patientMunicipality, string patientCity, string patientState, string patientZipCode, string patientPhoneNumber, string patientEmail, string patientFirstName, string patientLastName, string patientSurname, string patientGender, DateTime patientBirthDate, string patientCivilState, string patientReligion, string patientEthnicity, string patientBirthPlaceState, string patientBirthPlaceCountry)
         {
             PatientId = patientId;
             PatientNationalIdentityCode = patientNationalIdentityCode;
+			PatientSocialSecurityNumber = patientSocialSecurityNumber;
+			PatientExpedientNumber = patientExpedientNumber;
             PatientStreet = patientStreet;
             PatientExtrenalNumber = patientExtrenalNumber;
             PatientInternalNumber = patientInternalNumber;

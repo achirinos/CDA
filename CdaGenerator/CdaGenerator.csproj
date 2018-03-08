@@ -37,6 +37,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +71,12 @@
     <Compile Include="RequestTemplate.Designer.cs">
       <DependentUpon>RequestTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResponseTemplate.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ResponseTemplate.Designer.cs">
+      <DependentUpon>ResponseTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Software.cs" />
     <Compile Include="LegalAuthenticator.cs" />
   </ItemGroup>
@@ -82,6 +89,12 @@
     <EmbeddedResource Include="RequestTemplate.resx">
       <DependentUpon>RequestTemplate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ResponseTemplate.resx">
+      <DependentUpon>ResponseTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

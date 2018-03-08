@@ -10,11 +10,11 @@ namespace CdaGenerator
     {
         // ComponentOF
 
-        public string OidClinicalActs { get; set; }
-
         public string ClinicalActId { get; set; }
 
-        public string UserId { get; set; }
+		public string AttentionCode { get; set; }
+
+		public string UserId { get; set; }
 
         public string DoctorProfessionalLicense { get; set; }
 
@@ -34,30 +34,30 @@ namespace CdaGenerator
 
         public string LocationName { get; set; }
 
-        public string OrganizationAddress { get; set; }
+        public string LocationAddress { get; set; }
 
-        public string OrganizationPrecinct { get; set; }
+        public string LocationPrecinct { get; set; }
 
-        public string OrganizationCounty { get; set; }
+        public string LocationCounty { get; set; }
 
-        public string OrganizationState { get; set; }
+        public string LocationState { get; set; }
 
-        public string OrganizationPostalCode { get; set; }
+        public string LocationPostalCode { get; set; }
 
-        public string OrganizationCountry { get; set; }
+        public string LocationCountry { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public DateTime AttentionDateTime { get; set; }
 
         public ComponentOf()
         {
             
         }
 
-        public ComponentOf(string oidClinicalActs, string clinicalActId, string userId, string doctorProfessionalLicense, string doctorFirstName, string doctorMiddleName, string doctorLastName, string doctorSurname, string oidOrganization, string organizationName, string clues, string locationName, string organizationAddress, string organizationPrecinct, string organizationCounty, string organizationState, string organizationPostalCode, string organizationCountry, DateTime dateTime)
+        public ComponentOf(string clinicalActId, string attentionCode, string userId, string doctorProfessionalLicense, string doctorFirstName, string doctorMiddleName, string doctorLastName, string doctorSurname, string oidOrganization, string organizationName, string clues, string locationName, string locationAddress, string locationPrecinct, string locationCounty, string locationnState, string locationPostalCode, string organizationCountry, DateTime attentionDateTime)
         {
-            OidClinicalActs = oidClinicalActs;
             ClinicalActId = clinicalActId;
-            UserId = userId;
+			AttentionCode = attentionCode;
+			UserId = userId;
             DoctorProfessionalLicense = doctorProfessionalLicense;
             DoctorFirstName = doctorFirstName;
             DoctorMiddleName = doctorMiddleName;
@@ -67,13 +67,13 @@ namespace CdaGenerator
             OrganizationName = organizationName;
             Clues = clues;
             LocationName = locationName;
-            OrganizationAddress = organizationAddress;
-            OrganizationPrecinct = organizationPrecinct;
-            OrganizationCounty = organizationCounty;
-            OrganizationState = organizationState;
-            OrganizationPostalCode = organizationPostalCode;
-            OrganizationCountry = organizationCountry;
-            DateTime = dateTime;
+            LocationAddress = locationAddress;
+            LocationPrecinct = locationPrecinct;
+            LocationCounty = locationCounty;
+            LocationState = locationnState;
+            LocationPostalCode = locationPostalCode;
+            LocationCountry = organizationCountry;
+            AttentionDateTime = attentionDateTime;
         }
     }
 }

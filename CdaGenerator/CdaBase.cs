@@ -92,7 +92,7 @@ namespace CdaGenerator
         }
 
 
-        public void Pdf()
+        public void SaveRequestPdf()
         {
 
             var cda = cdaRequest;
@@ -101,13 +101,28 @@ namespace CdaGenerator
 
             var report = new RequestTemplate(cda);
 
-
             instaceReportSource.ReportDocument = report;
 
-            SaveReport(report, @"C:\Users\achir\Projects\file.pdf");
-        }
+            SaveReport(report, @"C:\Users\luisd\source\repos\CDA-Version_nueva\Request.pdf");
+			
+		}
 
-        private void SaveReport(Telerik.Reporting.Report report, string fileName)
+		public void SaveResponsePdf()
+		{
+
+			var cda = cdaResponse;
+
+			var instaceReportSource = new InstanceReportSource();
+
+			var report = new ResponseTemplate(cda);
+
+			instaceReportSource.ReportDocument = report;
+
+			SaveReport(report, @"C:\Users\luisd\source\repos\CDA-Version_nueva\Response.pdf");
+
+		}
+
+		private void SaveReport(Telerik.Reporting.Report report, string fileName)
         {
             var reportProcessor = new ReportProcessor();
 
@@ -163,7 +178,7 @@ namespace CdaGenerator
                 }
 
 
-                CdaHelper.UpdateComponentOf(xdoc, componentOf.OidClinicalActs, componentOf.ClinicalActId, OidSystemUsers, componentOf.UserId, componentOf.DateTime, componentOf.DoctorProfessionalLicense, componentOf.DoctorFirstName, componentOf.DoctorMiddleName, componentOf.DoctorLastName, componentOf.DoctorSurname, componentOf.OidOrganization, componentOf.OrganizationName, componentOf.Clues, componentOf.LocationName, componentOf.OrganizationAddress, componentOf.OrganizationPrecinct, componentOf.OrganizationCounty, componentOf.OrganizationState, componentOf.OrganizationPostalCode, componentOf.OrganizationCountry);
+                CdaHelper.UpdateComponentOf(xdoc, componentOf.AttentionCode, componentOf.ClinicalActId, OidSystemUsers, componentOf.UserId, componentOf.AttentionDateTime, componentOf.DoctorProfessionalLicense, componentOf.DoctorFirstName, componentOf.DoctorMiddleName, componentOf.DoctorLastName, componentOf.DoctorSurname, componentOf.OidOrganization, componentOf.OrganizationName, componentOf.Clues, componentOf.LocationName, componentOf.LocationAddress, componentOf.LocationPrecinct, componentOf.LocationCounty, componentOf.LocationState, componentOf.LocationPostalCode, componentOf.LocationCountry);
 
             }
         }

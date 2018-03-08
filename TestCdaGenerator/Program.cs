@@ -15,7 +15,7 @@ namespace TestCdaGenerator
         {
             Header header = new Header
             {
-                SystemDocumentId = "systemDocumentId",
+                SystemDocumentId = "d342c1b1-2262-4997-83b7-b7d1fd764e0f",
                 SystemDocumentName = "systemDocumentName",
                 HeaderDateTime = DateTime.Now
             };
@@ -23,7 +23,9 @@ namespace TestCdaGenerator
             Patient patient = new Patient
             {
                 PatientId = "V-11734823",
-                PatientNationalIdentityCode = "VE",
+                PatientNationalIdentityCode = "ACHIR000000HASSMS00",
+				PatientExpedientNumber = "A-123-456",
+				PatientSocialSecurityNumber = "123456789012345",
                 PatientStreet = "Av Lazaro Cardenas",
                 PatientExtrenalNumber = "14273114",
                 PatientInternalNumber = "11734823",
@@ -50,23 +52,23 @@ namespace TestCdaGenerator
             Author author = new Author
             {
                 AuthorDoctorId = "doctorId",
-                AuthorDoctorProfessionalLicense = "doctorProfessionalLicense",
-                AuthorDoctorFirstName = "doctorFirstName",
-                AuthorDoctorMiddleName = "doctorMiddleName",
-                AuthorDoctorLastName = "doctorLastName",
-                AuthorDoctorSurname = "doctorSurname",
-                AuthorOidSpecialty = "oidSpecialty",
-                AuthorSpecialtyName = "specialtyName",
+                AuthorDoctorProfessionalLicense = "987654321",
+                AuthorDoctorFirstName = "Rodrigo",
+                AuthorDoctorMiddleName = "",
+                AuthorDoctorLastName = "Diaz",
+                AuthorDoctorSurname = "Concha",
+                AuthorOidSpecialty = "0711",
+                AuthorSpecialtyName = "MEDICINA GENERAL",
                 AuthorDateTime = DateTime.Now,
                 AuthorOidOrganization = "oidOrganization",
-                AuthorOrganizationName = "organizationName"
+                AuthorOrganizationName = "Secretaria de Salud de Aguascalientes"
             };
             // Author
 
             Custodian custodian = new Custodian
             {
                 OidCustodianOrganization = "oidCustodianOrganization",
-                CustodianOrganizationName = "CustodianOrganizationName",
+                CustodianOrganizationName = "Centro Nacional de Excelencia Tecnológica en Salud (CENETEC)",
                 CustodianOrganizationTelecom = "CustodianOrganizationTelecom",
                 CustodianOrganizationAddress = "CustodianOrganizationAddress",
                 CustodianOrganizationPrecinct = "CustodianOrganizationPrecinct",
@@ -80,31 +82,33 @@ namespace TestCdaGenerator
             // ComponentOF
             ComponentOf componentOf = new ComponentOf
             {
-                OidClinicalActs = "oidClinicalActs",
-                ClinicalActId = "clinicalActId",
+                AttentionCode = "09-12",
+                ClinicalActId = "Clinica Calvillo",
                 UserId = "userID",
-                DoctorProfessionalLicense = "doctorProfessionalLicense",
-                DoctorFirstName = "doctorFirstName",
-                DoctorMiddleName = "doctorMiddleName",
-                DoctorLastName = "doctorLastName",
-                DoctorSurname = "doctorSurname",
+                DoctorProfessionalLicense = "1234567",
+                DoctorFirstName = "Luis",
+                DoctorMiddleName = "Daniel",
+                DoctorLastName = "Estrada",
+                DoctorSurname = "Ramos",
                 OidOrganization = "oidOrganization",
-                OrganizationName = "organizationName",
-                Clues = "clues",
-                LocationName = "locationName",
-                OrganizationAddress = "organizationAddress",
-                OrganizationPrecinct = "organizationPrecinct",
-                OrganizationCounty = "organizationCounty",
-                OrganizationState = "organizationState",
-                OrganizationPostalCode = "organizationPostalCode",
-                OrganizationCountry = "organizationCountry"
-            };
+                OrganizationName = "Instituto de salud de Aguascalientes",
+                Clues = "AGSCAL000152",
+                LocationName = "Hospital General de Calvillo",
+                LocationAddress = "Bloulevard Rodolfo Landeros SN",
+                LocationPrecinct = "Calvillo",
+                LocationCounty = "Calvillo",
+                LocationState = "Aguascalientes",
+                LocationPostalCode = "20800",
+                LocationCountry = "MX",
+				AttentionDateTime = new DateTime(2018,1,1,10,5,9),
+
+			};
 
 
             // Software
             Software software = new Software
             {
-                SoftwareName = "Lumed",
+                SoftwareName = "Lumed 1.2.0.0",
                 DateTime = DateTime.Now,
                 SoftwareInstitutionName = "Netemedical"
             };
@@ -128,7 +132,7 @@ namespace TestCdaGenerator
                     RecipientDoctorSurname = "doctorSurname",
                     RecipientDateTime = DateTime.Now,
                     RecipientOidOrganization = "2.16.840.1.113883.3.215.6.99.5",
-                    RecipientOrganizationName = "organizationName"
+                    RecipientOrganizationName = "Servicios de Saud de Calvillo"
                 };
             // InformationRecipient            
 
@@ -166,24 +170,24 @@ namespace TestCdaGenerator
             // Component
             ComponentRequest componentRequest = new ComponentRequest
             {
-                ReasonOfReferal = "Reason of referal",
-                Allergies = "Alergies",
-                Assesment = "Assesment",
-                Interrogatory = "interrogatory",
-                Procedures = "procedures",
-                Medication = "medication",
-                PhysicalExam = "physical exam",
-                Results = "Results",
-                VitalSigns = "Vital Signs"
-            };
+                ReasonOfReferal = "Motivo de la interconsulta",
+                Allergies = "Alergias del paciente. En caso de que no se tengan registradas alergias, se debe mostrar 'Sin alergias registradas'.",
+                Assesment = "Impresión Diagnóstica descrita por el médico",
+                Interrogatory = "Resumen del interrogatorio. Narración del problema que es motivo de esta atención.",
+                Procedures = "Procedimientos quirúrgicos y terapéuticos. En su caso indicar 'Sin procedimientos registrados'.",
+                Medication = "Tratamiento farmacológico. En su caso indicar 'Sin tratamiento farmacológico registrado'.",
+                PhysicalExam = "Exploración física y estado mental (en su caso)",
+                Results = "Descripción de resultados relevenates de los servicios auxiliares de diangóstico y tratamiento que hayan sido solicitados previamente.En su caso indicar 'Sin resultados de estudios'.",
+                VitalSigns = "Signos Vitales"
+			};
 
             ComponentResponse componentResponse = new ComponentResponse
             {
-                Interrogatory = "interrogatory",
-                Diagnostic = "diagnostic",
-                Orders = "orders",
-                TreatmentPlan = "treatmenPlan"
-            };
+                Interrogatory = "Resumen del interrogatorio. Narración del problema que es motivo de esta atención.",
+                Diagnostic = "Impresión Diagnóstica descrita por el médico",
+                Orders = "Sugerencia de estudios que se deberán realizar al paciente posterior a la interconsulta. (considerar que se incluye en Plan de tratamiento)",
+				TreatmentPlan = "Sugerencia del Plan de tratamiento y recomendaciones terapéuticas a seguir."
+			};
 
             InFulfillmentOf inFulfillmentOf = new InFulfillmentOf
             {
@@ -225,14 +229,13 @@ namespace TestCdaGenerator
             };
 
             Cda response = new Cda(cdaResponse);
+			response.SaveResponsePdf();
 
 
             //cdaRequest.Patient.PatientFirstName;
             Cda request = new Cda(cdaRequest);
-
-
             request.Save("request.xml");
-            request.Pdf();
+            request.SaveRequestPdf();
 
         }
     }

@@ -153,7 +153,7 @@ namespace CdaGenerator.Helper
         // ComponentOf
         public static string ComponentOfClinicalActIdPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:id";
         public static string ComponentOfAttentionCodePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:code";
-        public static string ComponentOfTimePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:effectiveTime/ns:low";
+        public static string ComponentOfAttentionTimePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:effectiveTime/ns:low";
 
 
         public static string ComponentOfSystemIdPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:id[1]";
@@ -163,7 +163,7 @@ namespace CdaGenerator.Helper
 
         public static string ComponentOfGivenNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:assignedPerson/ns:name/ns:given";
         public static string ComponentOfLastNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:assignedPerson/ns:name/ns:family[1]";
-        public static string ComponentOfurenamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:assignedPerson/ns:name/ns:family[2]";
+        public static string ComponentOfFirstNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:assignedPerson/ns:name/ns:family[2]";
 
         public static string ComponentOfOrganizationIdPath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:representedOrganization/ns:id";
         public static string ComponentOfOrganizationNamePath = "ns:ClinicalDocument/ns:componentOf/ns:encompassingEncounter/ns:responsibleParty/ns:assignedEntity/ns:representedOrganization/ns:name";
@@ -634,7 +634,7 @@ namespace CdaGenerator.Helper
                 idElement.Attribute("extension").Value = clinicalActId;
             }
 
-            var timeElement = xdoc.XPathSelectElement(ComponentOfTimePath, XmlNamespaceManager);
+            var timeElement = xdoc.XPathSelectElement(ComponentOfAttentionTimePath, XmlNamespaceManager);
             if (timeElement != null)
             {
                 timeElement.Attribute("value").Value = GetFormattedDateTime(dateTime);
@@ -657,7 +657,7 @@ namespace CdaGenerator.Helper
             var lastNameElement = xdoc.XPathSelectElement(ComponentOfLastNamePath, XmlNamespaceManager);
             if (lastNameElement != null) lastNameElement.Value = doctorLastName;
 
-            var surenameElement = xdoc.XPathSelectElement(ComponentOfurenamePath, XmlNamespaceManager);
+            var surenameElement = xdoc.XPathSelectElement(ComponentOfFirstNamePath, XmlNamespaceManager);
             if (surenameElement != null) surenameElement.Value = doctorSurname;
 
             var organizationIdElement = xdoc.XPathSelectElement(ComponentOfOrganizationIdPath, XmlNamespaceManager);
